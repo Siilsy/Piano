@@ -26,6 +26,8 @@ At the little beginning the notes are not going to be playable because they are 
 
 I tried to do a responsive page (adapted to all the size of screens) but I don't really succeeded but it's normally roughly correct. I'm sorry but it will be hard to play on phone I think... or maybe if you turn the phone on the side ??
 
+For the beauty of this project, I tried my best... It's just a piano, it didn't need to be THAT beautiful. I tried and I hope I succeeded to do it as beautiful as I can and normally, it's alright. You won't pay attention to this type of details... 
+
 Unfortunately, it's in French, but there are not so many text so it won't be hard to understand (at least I hope).
 
 The project has been finished the July 18th of 2024 after several hours of work (something like 30 - 40 hours I think (I was discovering JavaScript))
