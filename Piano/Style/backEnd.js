@@ -109,9 +109,10 @@ selection.addEventListener('mousemove', (e) => {
     if (isDragging) {
         const deltaX = e.clientX - startX;
         let newLeft = initialLeft + deltaX;
-        newLeft = Math.max(0, Math.min(newLeft, pianoVisualization.offsetWidth - selection.offsetWidth))
-        const scrollPercentage = newLeft / (pianoVisualization.offsetWidth - selection.offsetWidth);
-        scrollX = scrollPercentage * (realPianoWidth - pianoVisualization.offsetWidth);
+        const maxWidth = pianoVisualization.offsetWidth - selection.offsetWidth;
+        newLeft = Math.max(0, Math.min(newLeft, maxWidth))
+        const scrollPercentage = newLeft / maxWidth;
+        scrollX = scrollPercentage * (realPianoWidth - pianoVisualization.offsetWidth) + 2;
         scroll();
     }
 });
@@ -200,14 +201,10 @@ function scrollPreviousOctave() {
 }
 
 function scroll() {
-    piano.forEach(octave => {
-        octave.style.transform = `translateX(-${scrollX}px)`;
-    });
+    piano.forEach(octave => {octave.style.transform = `translateX(-${scrollX}px)`;});
     let offsetX = 0;
-    if (scrollX == 0) {offsetX = 0;}
-    else if (scrollX == maxXDiff) {offsetX = -1;}
-    else {offsetX = 2;}
-    let newLeft = scrollX / 42 * 1.85 / 100 * window.innerWidth - offsetX;
+    if (scrollX == maxXDiff) {offsetX = -0.2;}
+    let newLeft = scrollX / 42 * 1.85 / 100 * window.innerWidth - offsetX * (window.innerWidth / 100);
     selection.style.left = `${newLeft}px`;
     const leftMaskWidth = newLeft;
     const rightMaskWidth = pianoVisualization.clientWidth - (newLeft + selection.offsetWidth) + 2;
@@ -280,13 +277,15 @@ function playSound(key, pressing = 0) {
         if (changingMode) {selectionMode([`${note}${miniOctave}`]); return;}
         audio.currentTime = 0;
         audio.play()
+        pressedKey.classList.add(`keyplayed_${whiteOrSharp}`);
+        miniPianoKey.classList.add(`keyplayed_${whiteOrSharp}`);
         pressedKey.classList.add(`keypressed_${whiteOrSharp}`);
         miniPianoKey.classList.add(`keypressed_${whiteOrSharp}`);
         if (sustainMode) {
             if (timeoutIds[touche]) {clearTimeout(timeoutIds[touche]);}
             timeoutIds[touche] = setTimeout(() => {
-                pressedKey.classList.remove(`keypressed_${whiteOrSharp}`);
-                miniPianoKey.classList.remove(`keypressed_${whiteOrSharp}`);
+                pressedKey.classList.remove(`keyplayed_${whiteOrSharp}`);
+                miniPianoKey.classList.remove(`keyplayed_${whiteOrSharp}`);
                 delete timeoutIds[touche];
             }, 8000);
         }
@@ -294,9 +293,11 @@ function playSound(key, pressing = 0) {
     function stop() {
         if (!sustainMode) {
             audio.pause();
-            pressedKey.classList.remove(`keypressed_${whiteOrSharp}`);
-            miniPianoKey.classList.remove(`keypressed_${whiteOrSharp}`);
+            pressedKey.classList.remove(`keyplayed_${whiteOrSharp}`);
+            miniPianoKey.classList.remove(`keyplayed_${whiteOrSharp}`);
         }
+        pressedKey.classList.remove(`keypressed_${whiteOrSharp}`);
+        miniPianoKey.classList.remove(`keypressed_${whiteOrSharp}`);
     }
 };
 
