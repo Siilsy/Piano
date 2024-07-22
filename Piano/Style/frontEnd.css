@@ -138,9 +138,9 @@ body {
     flex-direction: row;
     background-color: #98ECB9;
     box-shadow: 0 0 10px 3px #555;
-    border-radius: 50px;
+    border-radius: 10vw;
     width: 98vw;
-    height: 7vw;
+    height: 6.3vw;
     align-items: center;
     justify-content: center;
 }
@@ -243,7 +243,7 @@ btn:not(#btnToggleSustainMode):hover {
     background-color: #333;
     position: relative;
     border-radius: 10px;
-    border: 2px solid #333;
+    border: 3px solid #333;
     box-shadow: 0 0 10px 0 #333;
     display: flex;
     flex-direction: row;
@@ -275,8 +275,9 @@ btn:not(#btnToggleSustainMode):hover {
     position: absolute;
     top: -.33px;
     left: 0;
-    height: 97%;
+    height: 100%;
     border: 2px solid #00F;
+    box-sizing: border-box;
     background: rgba(255, 255, 255, 0);
     cursor: grab;
     z-index: 10;
@@ -366,7 +367,8 @@ btn:not(#btnToggleSustainMode):hover {
     border-bottom-left-radius: 8px;
 }
 .whiteKey:hover {background-color: #ccc;}
-.keypressed_whiteKey {background-color: #aaa;}
+.keyplayed_whiteKey {background-color: #aaa;}
+.keypressed_whiteKey {background-color: #888;}
 .sharpKey {
     height: 33vh;
     width: var(--widthBlackKey);
@@ -381,7 +383,8 @@ btn:not(#btnToggleSustainMode):hover {
     z-index: 2;
 }
 .sharpKey:hover {background-color: #333;}
-.keypressed_sharpKey {background-color: #555;}
+.keyplayed_sharpKey {background-color: #555;}
+.keypressed_sharpKey {background-color: #777;}
 .Cs { margin-left: var(--csPosition); }
 .Ds { margin-left: var(--dsPosition); }
 .Fs { margin-left: var(--fsPosition); }
