@@ -442,7 +442,6 @@ document.addEventListener('keydown', (event) => {
                     let usedOctave = parseInt(currentKey.match(/\d+/)[0]);
                     list.push(`${usedNote}${usedOctave}`);
                 }
-                //computerKeys[index] = [];
             }
             selectionMode(list);
             return;
