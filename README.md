@@ -18,7 +18,11 @@ You also have the small visualization with which you can interact by dragging an
 
 The notes are normally named by default with the MIDI notation (C5, C#5, D5 ...), but you can switch to Latin notation (Do, Do#, Re) with the button at the top, which is two circular arrows. And of course, you also have the 'Insert' button.
 
-By default, the notes are very ugly because you don't have Sustain Mode. You can fortunately switch the Mode with the button in the top center, represented by the classic image of the Pedal. Otherwise, the keyboard key for that is 'Alt Right'.
+By default, the notes are very ugly because you don't have Sustain Mode. You can fortunately switch the Mode with the button in the top center, represented by the classic image of the Pedal. Otherwise, the keyboard key for that is 'Alt Right'. 
+
+To finish, there is also a button to switch between two modes: 'piano mode' and 'keyboard mode'. It's quite simple; one is the basic mode where you can assign one keyboard key to each piano key, and the other allows you to assign as many piano keys as you want to each keyboard key. 
+
+I will now explain the little changes that happen with 'keyboard mode', it looks hard but in practice it's really simple. Assigning a new key is similar. You can still remove all the assignments with 'Escape' and change all the piano keys assigned to one keyboard key to another. In this mode, you can select a piano key that is already assigned and assign a new key. To remove a specific keyboard key from a piano key, you can press that key after selecting the piano key. If you press 'Escape' at this moment, all the assignments of this piano key will disappear. 
 ##
 
 ## 🛠️ Details
@@ -30,5 +34,5 @@ For the beauty of this project, I tried my best... It's just a piano, it didn't 
 
 Unfortunately, it's in French, but there isn't much text so it shouldn't be hard to understand (at least I hope).
 
-The project was finished on July 18th, 2024 after several hours of work (something like 30 - 40 hours I think (I was discovering JavaScript)).
+The project was finished on July 18th, 2024 after several hours of work (something like 40 - 50 hours I think (I was discovering JavaScript)).
 ##
