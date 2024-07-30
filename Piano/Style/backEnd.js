@@ -8,6 +8,12 @@ window.addEventListener("focus", () =>{
 
 
 
+const selectionScreen = document.querySelector('#selectionScreen');
+for (let i = 0; i < 4; i++) {
+    const line = document.createElement('div');
+    line.id = `line${i + 1}`;
+    selectionScreen.appendChild(line);
+}
 const pianoContainer = document.querySelector('#piano');
 for (let i = -1; i < 8; i++) {
     let index = i; if (i < 1) {index -= 1;}
@@ -226,7 +232,8 @@ document.addEventListener('keydown', (event) => {
     const key = event.code;
     if (key == 'ArrowLeft' && !keysPressed['ArrowLeft']) {scrollPreviousOctave();}
     if (key == 'ArrowDown' && !keysPressed['ArrowDown']) {scrollLeft();}
-    if (key == 'Insert' && !keysPressed['Insert']) {changeVisu();}
+    if (key == 'End' && !keysPressed['End']) {changeVisu();}
+    if (key == 'Insert' && !keysPressed['Insert']) {changePianoMode();}
     if (key == 'AltRight' && !keysPressed['AltRight']) {toggleSustainMode();}
     if (key == 'Delete' && !keysPressed['Delete']) {changeMode();}
     if (key == 'ArrowUp' && !keysPressed['ArrowUp']) {scrollRight();}
@@ -356,6 +363,8 @@ const keyboardKeys4Piano = [
 [32, 33, 34, 35, 24, 25, 26, 27, 28, 29, 30, 31], 
 [44, 45, 46, 47, 36, 37, 38, 39, 40, 41, 42, 43]]
 let pianoKeys = Array(88).fill('');
+let computerKeys = Array.from({length: 48}, () => []);
+let pianoMode = false;
 updatePianoKeys();
 
 const keysPressed = {};
@@ -368,13 +377,30 @@ document.addEventListener('keydown', (event) => {
             for (let i = 0; i < keyboardKeys.length; i++) {
                 if (key == keyboardKeys[i] || key == 'Escape') {
                     for (let k = 0; k < selectedKey.length; k++) {
-                        const content = key == 'Escape' ? 'Vide' : `${key} (${keyboardSymbols[i]})`;
+                        const content = key == 'Escape' ? 'vide' : `${key} (${keyboardSymbols[i]})`;
                         selectionScreenLine4.textContent = content;
+                        if (pianoMode && key == 'Escape') {
+                            for (let n = 0; n < computerKeys.length; n++) {
+                                if (computerKeys[n].includes(selectedKey[k])) {computerKeys[n].pop(selectedKey[k]);}
+                            }
+                            break;
+                        }
                         const usedNote = selectedKey[k].match(/[A-Za-z]+/)[0];
                         let usedOctave = parseInt(selectedKey[k].match(/\d+/)[0]);
-                        const value = key == 'Escape' ? '' : i;
-                        for (let n = 0; n < classes.length; n++) {
-                            if (usedNote == classes[n]) {pianoKeys[3 + (usedOctave - 1) * 12 + n] = value; break;}
+                        const value = key == 'Escape' ? '' : pianoMode ? `${usedNote}${usedOctave}` : i;
+                        if (!pianoMode) {
+                            for (let n = 0; n < classes.length; n++) {
+                                if (usedNote == classes[n]) {pianoKeys[3 + (usedOctave - 1) * 12 + n] = value; break;}
+                            }
+                        }
+                        else {
+                            let index;
+                            for (let i = 0; i < 4; i++) {
+                                index = keyboardKeys4Piano[i].indexOf(keyboardKeys.indexOf(key))
+                                if (index != -1) {index += i * 12; break;}
+                            }
+                            if (computerKeys[index].includes(value)) {computerKeys[index].pop(value);}
+                            else {computerKeys[index].push(value);}
                         }
                     }
                     break;
@@ -394,29 +420,62 @@ document.addEventListener('keydown', (event) => {
     if (changingMode) {
         if (keyboardKeys.includes(key)) {
             const list = [];
-            for (let index = 0; index < pianoKeys.length; index++) {
-                if (key == keyboardKeys[pianoKeys[index]]) {
-                    let octave = Math.floor((index - 3) / 12) + 1;
-                    let note = index < 3 ? index + 9 : (index - 3) % 12;
-                    console.log(index, note, octave);
-                    note = classes[note];
-                    list.push(`${note}${octave}`);
+            if (!pianoMode) {
+                for (let index = 0; index < pianoKeys.length; index++) {
+                    if (key == keyboardKeys[pianoKeys[index]]) {
+                        let octave = Math.floor((index - 3) / 12) + 1;
+                        let note = index < 3 ? index + 9 : (index - 3) % 12;
+                        note = classes[note];
+                        list.push(`${note}${octave}`);
+                    }
                 }
+            }
+            else {
+                let index;
+                for (let i = 0; i < 4; i++) {
+                    index = keyboardKeys4Piano[i].indexOf(keyboardKeys.indexOf(key))
+                    if (index != -1) {index += i * 12; break;}
+                }
+                for (let i = 0; i < computerKeys[index].length; i++) {
+                    const currentKey = computerKeys[index][i];
+                    const usedNote = currentKey.match(/[A-Za-z]+/)[0];
+                    let usedOctave = parseInt(currentKey.match(/\d+/)[0]);
+                    list.push(`${usedNote}${usedOctave}`);
+                }
+                //computerKeys[index] = [];
             }
             selectionMode(list);
             return;
         }
         else if (key == 'Escape') {
-            pianoKeys = Array(88).fill('');
+            if (!pianoMode) {pianoKeys = Array(88).fill('');}
+            else {computerKeys = Array.from({length: 48}, () => []);}
             changeMode();
             updateKeyShortcut();
         }
     }
-    for (let i = 0; i < pianoKeys.length; i++) {
-        if (key == keyboardKeys[pianoKeys[i]] && !keysPressed[key]) {
-            keys.forEach((currentKey, n) => {
-                if (n == i) {playSound(currentKey, 1);}
-            });
+    if (!pianoMode) {
+        for (let i = 0; i < pianoKeys.length; i++) {
+            if (key == keyboardKeys[pianoKeys[i]] && !keysPressed[key]) {
+                keys.forEach((currentKey, n) => {
+                    if (n == i) {playSound(currentKey, 1);}
+                });
+            }
+        }
+    }
+    else if (!keysPressed[key] && keyboardKeys.includes(key)) {
+        let index;
+        for (let i = 0; i < 4; i++) {
+            index = keyboardKeys4Piano[i].indexOf(keyboardKeys.indexOf(key))
+            if (index != -1) {index += i * 12; break;}
+        }
+        for (let i = 0; i < computerKeys[index].length; i++) {
+            const currentKey = computerKeys[index][i];
+            const usedNote = currentKey.match(/[A-Za-z]+/)[0];
+            let usedOctave = parseInt(currentKey.match(/\d+/)[0]);
+            if (usedOctave < 2){usedOctave -= 1;} usedOctave -= 1;
+            const keyToPlay = document.querySelector(`#octave${usedOctave} .${usedNote}`);
+            playSound(keyToPlay, 1);
         }
     }
     keysPressed[key] = true;
@@ -424,11 +483,28 @@ document.addEventListener('keydown', (event) => {
 
 document.addEventListener('keyup', (event) => {
     const key = event.code;
-    for (let i = 0; i < pianoKeys.length; i++) {
-        if (key == keyboardKeys[pianoKeys[i]] && keysPressed[key]) {
-            keys.forEach((key, n) => {
-                if (n == i) {playSound(key, 2);}
-            });
+    if (!pianoMode) {
+        for (let i = 0; i < pianoKeys.length; i++) {
+            if (key == keyboardKeys[pianoKeys[i]] && keysPressed[key]) {
+                keys.forEach((currentKey, n) => {
+                    if (n == i) {playSound(currentKey, 2);}
+                });
+            }
+        }
+    }
+    else if (keysPressed[key] && keyboardKeys.includes(key)) {
+        let index;
+        for (let i = 0; i < 4; i++) {
+            index = keyboardKeys4Piano[i].indexOf(keyboardKeys.indexOf(key))
+            if (index != -1) {index += i * 12; break;}
+        }
+        for (let i = 0; i < computerKeys[index].length; i++) {
+            const currentKey = computerKeys[index][i];
+            const usedNote = currentKey.match(/[A-Za-z]+/)[0];
+            let usedOctave = parseInt(currentKey.match(/\d+/)[0]);
+            if (usedOctave < 2){usedOctave -= 1;} usedOctave -= 1;
+            const keyToPlay = document.querySelector(`#octave${usedOctave} .${usedNote}`);
+            playSound(keyToPlay, 2);
         }
     }
     keysPressed[key] = false;
@@ -438,8 +514,12 @@ document.addEventListener('keyup', (event) => {
 
 const btnChangeKeyAssignment = document.querySelector('#btnChangeKeyAssignment');
 const selectionContainer = document.querySelector('#selectionContainer');
+const selectionScreenLine1= document.querySelector('#selectionScreen #line1');
 const selectionScreenLine2 = document.querySelector('#selectionScreen #line2');
+const selectionScreenLine3 = document.querySelector('#selectionScreen #line3');
 const selectionScreenLine4 = document.querySelector('#selectionScreen #line4');
+selectionScreenLine1.textContent = 'Ré-assignation de la touche :';
+selectionScreenLine3.textContent = 'Sélectionnez la nouvelle touche (\'Echap\' pour l\'enlever) :';
 let changingMode = false;
 let selectedKey = [];
 btnChangeKeyAssignment.addEventListener('click', changeMode);
@@ -455,13 +535,9 @@ function selectionMode(key) {
     selectionScreenLine2.textContent = `${selectedKey}`;
     selectionScreenLine4.textContent = '<En attente de la touche>';
 }
-keys.forEach((key) => {
-    const keyShortcut = document.createElement('div');
-    keyShortcut.className = 'keyShortcut';
-    key.appendChild(keyShortcut);
-});
 updateKeyShortcut();
 function updatePianoKeys() {
+    if (pianoMode) {computerKeys = Array.from({length: 48}, () => []);}
     for (let i = 0; i < selectedOctave.length; i++) {
         let octave = selectedOctave[i];
         if (octave < 1) {octave += 1;} octave += 1;
@@ -469,15 +545,70 @@ function updatePianoKeys() {
         const occurence = octave == 0 ? 3 : octave == 8 ? 1 : 12;
         let offset = 0;
         if (octave == 0) {index += 9; offset = 9;}
-        for (let n = 0; n < occurence; n++) {pianoKeys[index + n] = keyboardKeys4Piano[i][n + offset];}
+        for (let n = 0; n < occurence; n++) {
+            pianoKeys[index + n] = keyboardKeys4Piano[i][n + offset];
+            computerKeys[i * 12 + n].push(`${classes[n + offset]}${octave}`);
+        }
     }
     updateKeyShortcut();
 }
 function updateKeyShortcut() {
-    const keyShortcuts = document.querySelectorAll('.keyShortcut');
-    keyShortcuts.forEach((key, i) => {
-        const name = keyboardSymbols[pianoKeys[i]];
-        if (name) {key.textContent = `${name}`;}
-        else {key.textContent = '';}
+    keys.forEach((key, i) => {
+        if (key.lastChild.className == 'keyShortcut') {key.removeChild(key.lastChild);}
+        const keyShortcuts = document.createElement('div');
+        keyShortcuts.className = 'keyShortcut';
+        if (!pianoMode) {
+            const name = keyboardSymbols[pianoKeys[i]];
+            if (name) {keyShortcuts.textContent = `${name}`;}
+            else {keyShortcuts.textContent = '';}
+        }
+        key.appendChild(keyShortcuts);
+        if (pianoMode) {
+            const note = key.classList[1];
+            const octave = key.closest('[id*="octave"]').id.match(/octave(-?\d)/)[1];
+            const keyShortcut = document.querySelector(`#octave${octave} .${note} .keyShortcut`);
+            let usedOctave = parseInt(octave);
+            if (usedOctave < 1) {usedOctave += 1;} usedOctave += 1;
+            const touche = note + usedOctave;
+            for (let n = 0; n < computerKeys.length; n++) {
+                if (computerKeys[n].includes(touche)) {
+                    let index = n;
+                    const name = keyboardSymbols[keyboardKeys4Piano[Math.floor(index / 12)][index % 12]];
+                    const keyDiv = document.createElement('div');
+                    keyDiv.className = 'key';
+                    keyDiv.textContent = `${name}`;
+                    keyShortcut.appendChild(keyDiv);
+                }
+            }
+        }
     });
+}
+const keyShortcuts = document.querySelectorAll('.keyShortcut');
+keyShortcuts.forEach(keyShortcut => {
+    let scrollDirection = 1;
+    setInterval(() => {
+        keyShortcut.scrollTop -= scrollDirection;
+        const maxHeight = (keyShortcut.scrollHeight - keyShortcut.clientHeight);
+        if (keyShortcut.scrollTop == maxHeight || keyShortcut.scrollTop == 0) {scrollDirection *= -1;}
+    }, 50);
+});
+
+const btnChangePianoMode = document.querySelector('#btnChangePianoMode');
+const btnChangePianoModeI = btnChangePianoMode.querySelector('i');
+btnChangePianoMode.addEventListener('click', changePianoMode);
+function changePianoMode() {
+    pianoMode = !pianoMode;
+    if (pianoMode) {
+        btnChangePianoMode.classList.add('rotate-fast');
+        setTimeout(() => {btnChangePianoMode.classList.remove('rotate-fast');}, 500);
+        btnChangePianoModeI.classList.remove('fa-dice-one');
+        btnChangePianoModeI.classList.add('fa-dice-six')
+    }
+    else {
+        btnChangePianoMode.classList.add('rotate-fast');
+        setTimeout(() => {btnChangePianoMode.classList.remove('rotate-fast');}, 500);
+        btnChangePianoModeI.classList.remove('fa-dice-six');
+        btnChangePianoModeI.classList.add('fa-dice-one')
+    }
+    updateKeyShortcut();
 }
