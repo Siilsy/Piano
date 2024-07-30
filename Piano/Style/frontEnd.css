@@ -180,16 +180,18 @@ btn i {
 .fa-angles-left:before{content: "\f100";}
 .fa-caret-left:before{content: "\f0d9";}
 .fa-rotate:before {content: "\f2f1";}
+.fa-dice-one:before{content: "\f525";} .fa-dice-six:before{content: "\f526";}
 .fa-cog:before{content: "\f013";}
 .fa-caret-right:before{content: "\f0da";}
 .fa-angles-right:before{content: "\f101";}
 
 #btnScrollPreviousOctave{margin-right: 2vw;}
-#btnScrollLeft{margin-right: 26vw;}
+#btnScrollLeft{margin-right: 23vw;}
 #btnChangeVisu{font-size: 3.5vw;}
+#btnChangePianoMode{margin-left: 2vw; font-size: 3.5vw;}
 #btnToggleSustainMode{margin-left: 2vw;}
 #btnChangeKeyAssignment{margin-left: 2vw;}
-#btnScrollRight{margin-left: 26vw;}
+#btnScrollRight{margin-left: 23vw;}
 #btnScrollNextOctave{margin-left: 2vw;}
 
 #btnToggleSustainMode img {height: 3.5vw; width: 3.5vw;}
@@ -225,6 +227,7 @@ btn:not(#btnToggleSustainMode):hover {
     transition: 1s linear;
     animation: rotate 1.5s linear infinite;
 }
+.rotate-fast i {animation: rotate .25s ease-in-out 1; filter: blur(6px);}
 @keyframes rotate {
     0% {transform: rotate(0deg);}
     50% {transform: rotate(180deg);}
@@ -398,6 +401,16 @@ btn:not(#btnToggleSustainMode):hover {
     margin-bottom: 5vh;
     text-wrap: wrap;
     text-align: center;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    max-height: 15vh;
+    overflow: hidden;
+}
+.key {
+    margin-left: auto;
+    margin-right: auto;
 }
 .sharpKey .keyShortcut {color: #999;}
 .whiteKey .keyShortcut {color: #666;}
