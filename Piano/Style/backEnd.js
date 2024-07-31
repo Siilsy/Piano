@@ -229,6 +229,7 @@ function toggleSustainMode() {
 }
 
 document.addEventListener('keydown', (event) => {
+    if (currentOctave != 5) {return;}
     const key = event.code;
     if (key == 'ArrowLeft' && !keysPressed['ArrowLeft']) {scrollPreviousOctave();}
     if (key == 'ArrowDown' && !keysPressed['ArrowDown']) {scrollLeft();}
@@ -310,9 +311,10 @@ function playSound(key, pressing = 0) {
 
 
 
-const selectedOctave = [2, 3, 4, 5];
-let currentOctave = 0;
-selectedOctave.forEach((number) => {visualizeSelection(number);})
+const selectedOctave = [[2, 3, 4, 5], [2, 3, 4, 5]];
+let pianoMode = false;
+let currentOctave = 5;
+selectedOctave[pianoMode ? 1 : 0].forEach((number) => {visualizeSelection(number);})
 function visualizeSelection(number, parameter = 1) {
     if (number < 1) {number += 1} number += 1; 
     let usefulOctave = document.querySelectorAll(`#octav_${number} .whit_key`);
@@ -324,28 +326,67 @@ function visualizeSelection(number, parameter = 1) {
 document.addEventListener('keydown', (event) => {
     const key = event.code;
     for (let i = 1; i < 10; i++) {
-        if (key == `Digit${i}` && !keysPressed[`Digit${i}`]) {
+        if (timeOut) {return;}
+        if ('Escape' + `Digit${i}`.includes(key) && !keysPressed[key]) {
             let number = i - 2;
             if (number < 1) {number -= 1;}
-            if (selectedOctave.includes(number)) {continue;}
-            if (selectedOctave.length == 4) {
-                const previousOctave = selectedOctave[currentOctave];
-                visualizeSelection(previousOctave, 0);
-                selectedOctave.splice(currentOctave, 1);
-                let octave = previousOctave + 1; if (octave < 1) {octave += 1;}
-                let index = 3 + (octave - 1) * 12;
-                const occurence = octave == 0 ? 3 : octave == 8 ? 1 : 12;
-                if (octave == 0) {index += 9;}
-                for (let n = 0; n < occurence; n++) {pianoKeys[index + n] = "";}
+            if (key == 'Escape' && currentOctave != 5) {selectionScreenLine4.textContent = 'annulation';}
+            else if (key != `Digit${i}`) {continue;}
+            else if (currentOctave == 5) {
+                if (selectedOctave[pianoMode ? 1 : 0].includes(number)) {
+                    currentOctave = selectedOctave[pianoMode ? 1 : 0].indexOf(number);
+                    selectionContainer.style.display = 'flex';
+                    selectionScreenLine1.textContent = 'Ré-assignation de l\'octave :';
+                    selectionScreenLine2.textContent = `${i - 1}`;
+                    selectionScreenLine3.textContent = 'Sélectionnez la nouvelle octave (\'Echap\' pour annuler) :';
+                    selectionScreenLine4.textContent = '<En attente de la touche>';
+                }
+                continue;
             }
-            selectedOctave.splice(currentOctave, 0, number);
-            visualizeSelection(number);
-            currentOctave += 1;
-            if (currentOctave == 4) {currentOctave = 0;}
-            updatePianoKeys();
+            else if (selectedOctave[pianoMode ? 1 : 0].includes(number)) {continue;}
+            else if (selectedOctave[pianoMode ? 1 : 0].length == 4) {
+                const previousOctave = selectedOctave[pianoMode ? 1 : 0][currentOctave];
+                visualizeSelection(previousOctave, 0);
+                selectedOctave[pianoMode ? 1 : 0].splice(currentOctave, 1, number);
+                selectionScreenLine4.textContent = i - 1;
+                visualizeSelection(number);
+                let value = previousOctave;
+                if (value < 1) {value += 1;} value += 1;
+                updatePianoKeys(value, i - 1);
+            }
+            timeOut = setTimeout(() => {
+                selectionContainer.style.display = 'none';
+                timeOut = 0;
+                currentOctave = 5;
+            }, 1000);
         }
     }
 });
+function updatePianoKeys(previousOctave, currentOctave) {
+    let index1 = 3 + (previousOctave - 1) * 12;
+    const occurence1 = previousOctave == 0 ? 3 : previousOctave == 8 ? 1 : 12;
+    if (previousOctave == 0) {index1 += 9;}
+    let index2 = 3 + (currentOctave - 1) * 12;
+    const occurence2 = currentOctave == 0 ? 3 : currentOctave == 8 ? 1 : 12;
+    let offset = 0;
+    if (currentOctave == 0) {index2 += 9; offset = 9;}
+    if (pianoMode) {
+        for (let i = 0; i < occurence2; i++) {
+            const previousNote = `${classes[i + offset]}${previousOctave}`;
+            const currentNote = `${classes[i + offset]}${currentOctave}`;
+            for (let n = 0; n < computerKeys.length; n++) {
+                if (computerKeys[n].includes(previousNote)) {
+                    computerKeys[n].splice(computerKeys[n].indexOf(previousNote), 1, currentNote);
+                }
+            }
+        }
+    }
+    else {
+        for (let i = 0; i < occurence2; i++) {pianoKeys[index2 + i] = pianoKeys[index1 + i + offset]}
+        for (let n = 0; n < occurence1; n++) {pianoKeys[index1 + n] = "";}
+    }
+    updateKeyShortcut();
+}
 
 const keyboardKeys = ['Backquote', 'Digit0', 'Minus', 'Equal', 'Backspace', 
 'Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 
@@ -364,12 +405,28 @@ const keyboardKeys4Piano = [
 [44, 45, 46, 47, 36, 37, 38, 39, 40, 41, 42, 43]]
 let pianoKeys = Array(88).fill('');
 let computerKeys = Array.from({length: 48}, () => []);
-let pianoMode = false;
-updatePianoKeys();
+for (let i = 0; i < selectedOctave[0].length; i++) {
+    let octave = selectedOctave[0][i] + 1;
+    if (octave < 2) {octave += 1;}
+    let index = 3 + (octave - 1) * 12;
+    const occurence = octave == 0 ? 3 : octave == 8 ? 1 : 12;
+    let offset = 0;
+    if (octave == 0) {index += 9; offset = 9;}
+    for (let n = 0; n < occurence; n++) {pianoKeys[index + n] = keyboardKeys4Piano[i][n + offset];}
+}
+for (let i = 0; i < selectedOctave[1].length; i++) {
+    let octave = selectedOctave[1][i] + 1;
+    if (octave < 2) {octave += 1;}
+    const occurence = octave == 0 ? 3 : octave == 8 ? 1 : 12;
+    let offset = octave ? 0 : 9;
+    for (let n = 0; n < occurence; n++) {computerKeys[i * 12 + n].push(`${classes[n + offset]}${octave}`);}
+}
+updateKeyShortcut();
 
 const keysPressed = {};
 let timeOut;
 document.addEventListener('keydown', (event) => {
+    if (currentOctave != 5) {return;}
     const key = event.code;
     if (selectedKey.length > 0) {
         if (timeOut) {return;}
@@ -517,8 +574,6 @@ const selectionScreenLine1= document.querySelector('#selectionScreen #line1');
 const selectionScreenLine2 = document.querySelector('#selectionScreen #line2');
 const selectionScreenLine3 = document.querySelector('#selectionScreen #line3');
 const selectionScreenLine4 = document.querySelector('#selectionScreen #line4');
-selectionScreenLine1.textContent = 'Ré-assignation de la touche :';
-selectionScreenLine3.textContent = 'Sélectionnez la nouvelle touche (\'Echap\' pour l\'enlever) :';
 let changingMode = false;
 let selectedKey = [];
 btnChangeKeyAssignment.addEventListener('click', changeMode);
@@ -531,25 +586,10 @@ function changeMode() {
 function selectionMode(key) {
     selectedKey = key;
     selectionContainer.style.display = 'flex';
+    selectionScreenLine1.textContent = 'Ré-assignation de la touche :';
     selectionScreenLine2.textContent = `${selectedKey}`;
+    selectionScreenLine3.textContent = 'Sélectionnez la nouvelle touche (\'Echap\' pour l\'enlever) :';
     selectionScreenLine4.textContent = '<En attente de la touche>';
-}
-updateKeyShortcut();
-function updatePianoKeys() {
-    if (pianoMode) {computerKeys = Array.from({length: 48}, () => []);}
-    for (let i = 0; i < selectedOctave.length; i++) {
-        let octave = selectedOctave[i];
-        if (octave < 1) {octave += 1;} octave += 1;
-        let index = 3 + (octave - 1) * 12;
-        const occurence = octave == 0 ? 3 : octave == 8 ? 1 : 12;
-        let offset = 0;
-        if (octave == 0) {index += 9; offset = 9;}
-        for (let n = 0; n < occurence; n++) {
-            pianoKeys[index + n] = keyboardKeys4Piano[i][n + offset];
-            computerKeys[i * 12 + n].push(`${classes[n + offset]}${octave}`);
-        }
-    }
-    updateKeyShortcut();
 }
 function updateKeyShortcut() {
     keys.forEach((key, i) => {
@@ -609,5 +649,7 @@ function changePianoMode() {
         btnChangePianoModeI.classList.remove('fa-dice-six');
         btnChangePianoModeI.classList.add('fa-dice-one')
     }
+    selectedOctave[pianoMode ? 0 : 1].forEach((number) => {visualizeSelection(number, 0);})
+    selectedOctave[pianoMode ? 1 : 0].forEach((number) => {visualizeSelection(number);})
     updateKeyShortcut();
 }
