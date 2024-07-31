@@ -36,5 +36,5 @@ For the beauty of this project, I tried my best... It's just a piano, it didn't 
 
 Unfortunately, it's in French, but there isn't much text so it shouldn't be hard to understand (at least I hope).
 
-The project was finished on July 18th, 2024 after several hours of work (something like 40 - 50 hours I think (I was discovering JavaScript)).
+The project was finished on July 18th, 2024 after several hours of work (something like 50 - 60 hours I think (I was discovering JavaScript)).
 ##
