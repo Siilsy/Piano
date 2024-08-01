@@ -375,6 +375,9 @@ function updatePianoKeys(previousOctave, currentOctave) {
             const previousNote = `${classes[i + offset]}${previousOctave}`;
             const currentNote = `${classes[i + offset]}${currentOctave}`;
             for (let n = 0; n < computerKeys.length; n++) {
+                if (computerKeys[n].includes(currentNote)) {
+                    computerKeys[n].splice(computerKeys[n].indexOf(currentNote), 1);
+                }
                 if (computerKeys[n].includes(previousNote)) {
                     computerKeys[n].splice(computerKeys[n].indexOf(previousNote), 1, currentNote);
                 }
