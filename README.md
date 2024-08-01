@@ -9,7 +9,7 @@ You can do everything only with your mouse so it's pretty easy, right?
 
 I have 88 keys on my piano but on a normal keyboard, there aren't that many keys. So I had to assign 4 octaves to deal with and assign each octave 12 keys on my keyboard. To change the selected octaves, you can press the first 9 digits. There are 9 octaves from 0 to 8, so the digits from 1 to 9 fit perfectly!
 
-Everything will be explained. First, you need to select an octave to edit, and then you'll choose the target octave with which you want to exchange. This will transfer all your key assignments at the same time! There are two different sets of selected octaves: one for each of the two piano modes. This makes it more practical!
+Everything will be explained. First, you need to select an octave to edit, and then you'll choose the target octave with which you want to exchange. This will transfer all your key assignments at the same time! There are two different sets of selected octaves: one for each of the two piano modes. This makes it more practical! But be careful because all the assignations of the new selected octave will disappear!
 
 The keyboard keys for the piano are displayed for a 'QWERTY' keyboard, but it doesn't matter which keyboard layout you have. If you are using 'AZERTY', you just have to remember that the displayed 'Q' on a piano key is actually the 'A' on your keyboard.
 
