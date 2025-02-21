@@ -441,7 +441,9 @@ document.addEventListener('keydown', (event) => {
                         selectionScreenLine4.textContent = content;
                         if (pianoMode && key == 'Escape') {
                             for (let n = 0; n < computerKeys.length; n++) {
-                                if (computerKeys[n].includes(selectedKey[k])) {computerKeys[n].pop(selectedKey[k]);}
+                                if (computerKeys[n].includes(selectedKey[k])) {
+                                    computerKeys[n] = computerKeys[n].filter(value => value != selectedKey[k]);
+                                }
                             }
                             break;
                         }
@@ -459,7 +461,9 @@ document.addEventListener('keydown', (event) => {
                                 index = keyboardKeys4Piano[i].indexOf(keyboardKeys.indexOf(key))
                                 if (index != -1) {index += i * 12; break;}
                             }
-                            if (computerKeys[index].includes(value)) {computerKeys[index].pop(value);}
+                            if (computerKeys[index].includes(value)) {
+                                computerKeys[index] = computerKeys[index].filter(nb => nb != value);
+                            }
                             else {computerKeys[index].push(value);}
                         }
                     }
