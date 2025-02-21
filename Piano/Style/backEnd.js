@@ -428,6 +428,7 @@ updateKeyShortcut();
 
 const keysPressed = {};
 let timeOut;
+let keydown = -1;
 document.addEventListener('keydown', (event) => {
     if (currentOctave != 5) {return;}
     const key = event.code;
@@ -440,9 +441,19 @@ document.addEventListener('keydown', (event) => {
                         const content = key == 'Escape' ? 'vide' : `${key} (${keyboardSymbols[i]})`;
                         selectionScreenLine4.textContent = content;
                         if (pianoMode && key == 'Escape') {
-                            for (let n = 0; n < computerKeys.length; n++) {
-                                if (computerKeys[n].includes(selectedKey[k])) {
-                                    computerKeys[n] = computerKeys[n].filter(value => value != selectedKey[k]);
+                            if (keydown !== -1) {
+                                let index;
+                                for (let i = 0; i < 4; i++) {
+                                    index = keyboardKeys4Piano[i].indexOf(keyboardKeys.indexOf(keydown))
+                                    if (index != -1) {index += i * 12; break;}
+                                }
+                                computerKeys[index] = [];
+                                keydown = -1;
+                            } else { 
+                                for (let n = 0; n < computerKeys.length; n++) {
+                                    if (computerKeys[n].includes(selectedKey[k])) {
+                                        computerKeys[n] = computerKeys[n].filter(value => value != selectedKey[k]);
+                                    }
                                 }
                             }
                             break;
@@ -495,6 +506,7 @@ document.addEventListener('keydown', (event) => {
                 }
             }
             else {
+                keydown = key;
                 let index;
                 for (let i = 0; i < 4; i++) {
                     index = keyboardKeys4Piano[i].indexOf(keyboardKeys.indexOf(key))
