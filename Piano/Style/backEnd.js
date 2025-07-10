@@ -282,7 +282,7 @@ function playSound(key, pressing = 0) {
         key.addEventListener('mouseleave', stop);
     }
     function play() {
-        if (changingMode) {selectionMode([`${note}${miniOctave}`]); return;}
+        if (changingMode) {whereRequestIsFrom = 'pianoKey'; selectionMode([`${note}${miniOctave}`]); return;}
         audio.currentTime = 0;
         audio.play()
         pressedKey.classList.add(`keyplayed_${whiteOrSharp}`);
@@ -429,6 +429,7 @@ updateKeyShortcut();
 const keysPressed = {};
 let timeOut;
 let keydown = -1;
+let whereRequestIsFrom;
 document.addEventListener('keydown', (event) => {
     if (currentOctave != 5) {return;}
     const key = event.code;
@@ -472,10 +473,20 @@ document.addEventListener('keydown', (event) => {
                                 index = keyboardKeys4Piano[i].indexOf(keyboardKeys.indexOf(key))
                                 if (index != -1) {index += i * 12; break;}
                             }
-                            if (computerKeys[index].includes(value)) {
-                                computerKeys[index] = computerKeys[index].filter(nb => nb != value);
+                            if (whereRequestIsFrom == 'pianoKey') {
+                                if (computerKeys[index].includes(value)) {
+                                    computerKeys[index] = computerKeys[index].filter(nb => nb != value);
+                                } else {
+                                    computerKeys[index].push(value);
+                                }
                             }
-                            else {computerKeys[index].push(value);}
+                            if (whereRequestIsFrom == 'computerKey') {
+                                if (computerKeys[index].includes(value)) {
+                                    //It's not because the key is already on the note that I will remove it. So I'm doing nothing here!
+                                } else {
+                                    computerKeys[index].push(value);
+                                }
+                            }
                         }
                     }
                     break;
@@ -519,6 +530,9 @@ document.addEventListener('keydown', (event) => {
                     list.push(`${usedNote}${usedOctave}`);
                 }
             }
+
+            whereRequestIsFrom = 'computerKey';
+
             selectionMode(list);
             return;
         }
