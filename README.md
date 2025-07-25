@@ -24,7 +24,7 @@ This version introduces advanced audio features, soundfont support, MIDI file ma
 
 ## 🎧 Reverb & Impulse Response
 
-Reverb only works when a `.wav` impulse response is provided. Without it, the reverb will not function — no sound will be heard if it's enabled with an empty buffer.
+Reverb only works when a `.wav` impulse response is provided. Without it, the reverb will not function — the casual sound of the piano will be heard if it's enabled with an empty buffer.
 
 You can import your own `.wav` files (mono or stereo), or use this file with 134 impulse responses included:  
 🧷 File not included by default for size reasons.
@@ -37,12 +37,16 @@ Recommended external IR packs:
 - [Samplicity Bricasti M7 Impulses (Web Archive)](https://web.archive.org/web/20190201211631/http://www.samplicity.com/bricasti-m7-impulse-responses/)  
   These range from 196MB to 409MB — too large to embed by default.
 
+⚠️ The file will be treated the same whether it’s mono, stereo, left channel, or right channel — so don’t worry too much about what exactly you’re importing.
+Sure, it may not be ultra-realistic, but it’s more than enough: it works well, it sounds fine, and it does the job.
+
 ---
 
 ## 🎵 SoundFonts & MIDI
 
-⚠️ SoundFonts may sound unusually quiet. Some `.sf2` files send instruments to reverb processors at only 11%, 5%, or even 1% volume.  
-This is **not a bug**, it's the original design of the soundfont.
+⚠️ Please note that the overall output level of some instruments — or even specific notes — may sound unexpectedly low. For example, in the best_for_low_data.sf2 soundfont, certain instruments are routed to the reverb effects processor at only 11% of their full level. As a result, they may sound up to 10 times quieter than expected.
+Others are sent at just 1%, making them almost inaudible.
+🎧 This behavior is **not a bug**, nor an issue with this synthesizer — it’s part of the original design of the soundfont itself. While it may seem unusual, that’s how the author intended it.
 
 To mitigate this, the app includes a **toggle** to adjust how these effects are handled when they are activated in the effects window. You will find a button, either green or red and wihtout icon to activate / deactivate the inputs from `.sf2` files and only care about _your_ inputs.
 
@@ -71,7 +75,12 @@ Those are the best I came up with (and I heard about the airfont that are appare
 - When you apply your own ADSR, it **layers on top** of the existing one.
 - This can cause unusual results but is usually subtle and acceptable.
 
-The same applies to the **dynamic release** system: it's intentionally basic, and timing may not feel 100% natural.
+A **dynamic release** is applied by default when you release a key.
+It can feel quite rough or even awkward, and I fully agree — it’s far from perfect.
+Accurately predicting how long a sound should take to fade out is tricky, and I haven't found a reliable way to improve it yet.
+So yes, it may sound a bit off or unnatural in some cases, but that’s just how it is for now.
+
+I prefer being transparent about this rather than pretending everything works flawlessly.
 
 ---
 
