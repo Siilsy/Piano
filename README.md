@@ -82,6 +82,8 @@ So yes, it may sound a bit off or unnatural in some cases, but that’s just how
 
 I prefer being transparent about this rather than pretending everything works flawlessly.
 
+It only happens on the sounds from `.sf2` files. I mean, there's a dynamic release with the basic piano too but I tried my best to make it as near as perfect as I could and it's fine but for the other intruments, I did not try to find the perfect release time... 
+
 ---
 
 ## ⌨️ Keyboard Shortcuts (not tooltipped)
