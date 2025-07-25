@@ -54,7 +54,10 @@ Recommended free SF2s (Wayback Machine):
 | airfont_340 | 76.8MB | [🔗 Download](https://archive.org/download/free-soundfonts-sf2-2019-04/airfont_340.sf2) |
 | airfont_380_final | 263.1MB | [🔗 Download](https://archive.org/download/free-soundfonts-sf2-2019-04/airfont_380_final.sf2) |
 
-> Fully compatible with SoundFont 2 specs, including exclusive class logic.
+Those are the best I came up with (and I heard about the airfont that are apparently really good) but if you want to check it by yourself the best place to do so (for me) is on the WayBack Machine (but you can surely find SoundFonts else where by yourself if you want to!): 
+[WayBack Machine page](https://archive.org/download/free-soundfonts-sf2-2019-04)
+
+> Fully compatible with SoundFont 2 specs !!
 
 ---
 
@@ -89,9 +92,10 @@ Some controls are accessible only via keyboard:
 
 ⚠️ Not usable on mobile — the screen is too small, and there's no hover interaction on certain buttons.  
 You can still play basic piano notes, but for the full experience, please use a computer.
+If you want to have a piano on your phone, check the first version which was just a simple piano but with way less features, so it's clearly better for you if you just want to play with a basic piano.
 
 🛠️ Tested on:  
-> **Laptop model**: HP Pavilion 15 (Windows 10, Chrome)  
+> **Laptop model**: Inspiron 14 5435 (Windows 11, Chrome)  
 > Not tested on other systems, so bug reports are welcome!
 
 ---
