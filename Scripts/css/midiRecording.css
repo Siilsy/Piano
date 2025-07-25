@@ -1,0 +1,265 @@
+
+#recordFlash {
+    position: absolute;
+    width: 2vw;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    background-color: #f55;
+    box-shadow: 0 0 6px 3px #f55;
+}
+
+@keyframes flash {
+    0% { background-color: #f55; box-shadow: 0 0 6px 3px #f55; }
+    50% { background-color: transparent; box-shadow: none; }
+}
+
+#inputSelectBox { margin-right: 4vw; }
+#midiHistoryBox { margin-left: 4vw; }
+
+#inputSelectBox, #midiHistoryBox {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 5vw;
+    width: 25vw;
+    border-radius: 2.5vw;
+    background-color: rgb(100, 100, 255, .5);
+    box-shadow: 0 0 5px 2px rgba(100, 100, 255, .5);
+    cursor: pointer;
+    transition: .3s ease-in-out;
+}
+#inputSelectBox:hover, #midiHistoryBox:hover {
+    background-color: rgba(100, 100, 255, .8);
+    box-shadow: 0 0 5px 2px rgba(100, 100, 255, .8);
+    transform: scale(1.05);
+}
+#inputSelectIcon, #midiHistoryIcon {
+    position: relative;
+    display: flex;
+    height: 4vw;
+    width: 4vw;
+    align-items: center;
+    justify-content: left;
+    font-size: 3vw;
+    margin-right: 1vw;
+    color: #333;
+}
+#inputSelectText, #midiHistoryText {
+    position: relative;
+    display: flex;
+    width: fit-content;
+    height: 4vw;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    color: #333;
+}
+
+
+
+#inputSelectWindow, #midiHistoryWindow {
+    display: none;
+    position: absolute;
+    z-index: 15;
+    overflow: hidden;
+    border-radius: 2vw;
+}
+
+#inputSelectWindow {
+    width: 27vw;
+    height: fit-content;
+    background-color: rgba(70, 70, 200, 1);
+    border: 2px solid #000;
+    box-shadow: 0 0 10px 5px rgba(70, 70, 200, 1);
+    padding: 1vw;
+}
+#inputsBox {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10%;
+    background-color: rgba(100, 100, 255, 1);
+    width: 25vw;
+    border-radius: 2vw;
+}
+#inputPianoBox, #inputMidiBox {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+#inputPianoBox {padding-bottom: 2vw; border-bottom: 1px solid #000;}
+#inputMidiBox {padding-top: 2vw; border-top: 1px solid #000;}
+#inputPiano, #inputMidi, #inputPianoSf2, #inputMidiSf2 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+}
+#inputPiano, #inputMidi {padding-right: 3vw; border-right: 1px solid #000;}
+#inputPianoSf2, #inputMidiSf2 {
+    padding-left: 0vw;
+    background-color: rgba(85, 85, 220, 1);
+    height: 9vw;
+    width: 9vw;
+    border-top-right-radius: 2vw;
+    border-bottom-right-radius: 2vw;
+}
+#inputPianoIcon, #inputMidiIcon, #inputPianoSf2Icon, #inputMidiSf2Icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-bottom: 1vw;
+    cursor: pointer;
+    transition: .3s ease;
+}
+#inputPianoIcon:hover, #inputMidiIcon:hover, #inputPianoSf2Icon:hover, #inputMidiSf2Icon:hover {
+    scale: 1.1;
+}
+#inputPianoIcon, #inputMidiIcon {
+    font-size: 4vw;
+    width: 5vw;
+    height: 5vw;
+}
+#inputPianoSf2Icon, #inputMidiSf2Icon {
+    font-size: 2.8vw;
+    width: 3.5vw;
+    height: 3.5vw;
+}
+#inputPianoText, #inputMidiText, #inputPianoSf2Text, #inputMidiSf2Text {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    white-space: nowrap;
+    height: 3vw;
+    background-color: rgba(0, 0, 0, .6);
+    color: rgba(255, 255, 255, .9);
+    padding: 10%;
+    box-sizing: border-box;
+    border-radius: 1vw;
+}
+#inputPianoText, #inputMidiText {
+    font-size: 2vw;
+}
+#inputPianoSf2Text, #inputMidiSf2Text {
+    font-size: 1.4vw;
+}
+
+#inputPianoSf2Mask, #inputMidiSf2Mask {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, .7);
+    border-radius: inherit;
+}
+
+
+#midiHistoryWindow {
+    flex-direction: column;
+    background-color: #000;
+    height: 80vh;
+    width: 40vw;
+    border: 2px solid #fff;
+    box-shadow: 0 0 10px 5px rgba(200, 200, 70, 1);
+}
+.midiRow {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+    height: 10%;
+    align-items: center;
+    justify-content: center;
+    padding: 2%;
+    padding-right: 0%;
+    box-sizing: border-box;
+}
+.unusedRow {
+    background-color: #222;
+}
+.usedRow {
+    background-color: #ffa;
+    cursor: pointer;
+}
+.usedRow:hover {
+    background-color: #ff7;
+}
+
+.midiNameBox {
+    position: relative;
+    display: flex;
+    width: 61%;
+    height: 100%;
+    justify-content: left;
+    align-items: center;
+}
+.midiName {
+    position: relative;
+    display: flex;
+    font-size: 1.2vw;
+    width: 98%;
+    padding-right: 2%;
+    box-sizing: border-box;
+}
+.midiInputRename {
+    display: none;
+    font-family: inherit;
+    font-size: 1.2vw;
+    color: #000;
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    width: 96%;
+    padding-right: 2%;
+    box-sizing: border-box;
+}
+.midiRenameBox, .midiRemoveBox, .midiExportBox {
+    position: relative;
+    display: flex;
+    width: 13%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+.midiRename, .midiRemove, .midiExport {
+    position: relative;
+    display: flex;
+    height: 100%;
+    aspect-ratio: 1/1;
+    background-color: #fc3;
+    box-shadow: 0 0 5px 2px #fc3;
+    color: #000;
+    cursor: help;
+    justify-content: center;
+    align-items: center;
+    font-size: .4w;
+    border-radius: 50%;
+    transition: .5s ease-in-out;
+    overflow: hidden;
+    user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+.midiNameBox, .midiRenameBox, .midiRemoveBox {
+    border-right: 1px solid #333;
+}
+.midiRename:hover, .midiRemove:hover, .midiExport:hover {
+    background-color: #000;
+    box-shadow: 0 0 5px 2px #000;
+    color: #fff;
+    transform: scale(1.1);
+}

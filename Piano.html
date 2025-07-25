@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=chrome">
+        <meta name="description" content="Here is an ultra-complete 88-key virtual synthesizer!">
+        <meta name="Author" content="Maëlan Gallais">
+        <meta name="keywords" content="piano, synthesizer, synth, MIDI, virtual instrument, Web Audio API, music, soundfont, JavaScript, interactive, digital piano, music tool, sound engine, sf2, mid, SVG, HTML5, web audio, audio, virtual instrument">
+        <meta name="robot" content="index, follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Ton parfum m'enivre !</title>
+        <link rel="icon" type="image/x-icon" sizes="16x16" href="Pictures/icon-16.ico">
+        <link rel="icon" type="image/x-icon" sizes="32x32" href="Pictures/icon-32.ico">
+        <link rel="icon" type="image/x-icon" sizes="64x64" href="Pictures/icon-64.ico">
+
+        <link rel="stylesheet" href="Scripts\css\main.css">
+        <link rel="stylesheet" href="Scripts\css\loadingScreen.css">
+        <link rel="stylesheet" href="Scripts\css\settings.css">
+        <link rel="stylesheet" href="Scripts\css\dropdowns.css">
+        <link rel="stylesheet" href="Scripts\css\animation.css">
+        <link rel="stylesheet" href="Scripts\css\windows.css">
+        <link rel="stylesheet" href="Scripts\css\pianoVisualization.css">
+        <link rel="stylesheet" href="Scripts\css\piano.css">
+        <link rel="stylesheet" href="Scripts\css\effects.css">
+        <link rel="stylesheet" href="Scripts\css\midiRecording.css">
+
+        <script src="Scripts\js\noteBuffers.js" defer></script>
+        <script src="Scripts\js\usefulMethods.js" defer></script>
+        <script src="Scripts\js\midiFileReader.js" defer></script>
+        <script src="Scripts\js\midiHandling.js" defer></script>
+        <script src="Scripts\js\soundFontFileReader.js" defer></script>
+        <script src="Scripts\js\soundFontHandling.js" defer></script>
+        <script src="Scripts\js\piano.js" defer></script>
+        <script src="Scripts\js\effectsHandling.js" defer></script>
+    </head>
+    <body>
+        <div id="loadingScreen">
+            <div id="picture-container"><img src="Pictures/Picture.jpg" alt="Image de chargement"></div>
+            <div id="textContainer">Loading... <br> Uploading instrument(s)</div>
+            <div id="progressContainer">
+                <div id="progressBar"></div>
+            </div>
+        </div>
+        <div id="selectionContainer"><div id="selectionScreen"></div></div>
+        <div id="settingsContainer"><div id="settingsScreen"></div></div>
+        <div id="effectsContainer"></div>
+        <div id="sf2SettingsContainer"><div id="sf2SettingsScreen"></div></div>
+        <div id="settingsGroup">
+            <btn id="btnScrollUp"><i class="fas fa-scroll-up"></i></btn>
+            <div id="settings">
+                <div id="stage1">
+                    <btn id="btnScrollPreviousOctave"><i class="fas fa-angles-left"></i></btn>
+                    <btn id="btnScrollLeft"><i class="fas fa-caret-left"></i></btn>
+
+                    <btn id="btnChangeVisu"><i class="fas fa-rotate"></i></btn>
+                    <btn id="btnChangePianoMode"><i class="fas fa-dice-one"></i></btn>
+                    <btn id="btnToggleSustainMode"><img src="Pictures/pedal.png"></btn>
+                    <btn id="btnChangeKeyAssignment"><i class="fas fa-cog"></i></btn>
+                    <div id="volumeContainer"></div>
+
+                    <btn id="btnScrollRight"><i class="fas fa-caret-right"></i></btn>
+                    <btn id="btnScrollNextOctave"><i class="fas fa-angles-right"></i></btn>
+                </div>
+                <div id="stage2">
+                    <div class="title">FX</div>
+                </div>
+                <div id="stage3">
+                    <div class="title">MIDI</div>
+
+                    <div id="inputSelectBox"></div>
+
+                    <btn id="btnForget"><i class="fas fa-remove"></i></btn>
+
+                    <btn id="btnRecord"><i class="fas fa-play"></i></btn>
+
+                    <btn id="btnPause"><i class="fas fa-pause"></i></btn>
+                    <btn id="btnUpload"><i class="fas fa-file-upload"></i></btn>
+
+                    <div id="midiHistoryBox"></div>
+                </div>
+                <div id="stage4">
+                    <div class="title">MIDI</div>
+                    <btn id="btnImportMid"><i class="fas fa-import"></i></btn>
+                    <input type="file" id="midiInput" accept=".mid">
+    
+                    <div id="instrumentSelector">
+                        <div id="instrumentSelectorTitle">Channels</div>
+                    </div>
+
+                    <btn id="btnRemoveMid"><i class="fas fa-remove"></i></btn>
+                    <btn id="btnPlay"><i class="fas fa-circle-play"></i></btn>
+                    <btn id="btnLoop"><i class="fas fa-loop"></i></btn>
+                    <div id="controls"></div>
+                </div>
+                <div id="stage5">
+                    <div class="title">SF2</div>
+
+                    <btn id="btnRemoveSf2"><i class="fas fa-remove"></i></btn>
+                    <div id="presetSelector">
+                        <div id="selectedPreset"></div>
+                    </div>
+                    <btn id="btnSf2Settings"><i class="fas fa-settings"></i></btn>
+                    <btn id="btnSf2Infos"><i class="fas fa-info"></i></btn>
+
+                    <!-- Yes, I put THAT here (the btnImportSf2 just below ↓ ). It's strange but it's because when you're doing nothing, you have the settings button on the left and this one on the right and when it disappears, the settings button appears on the right of the others elements. So it's strange and I don't like that but whatever... -->
+                    <btn id="btnImportSf2"><i class="fas fa-import"></i></btn>
+                    <input type="file" id="sf2Input" accept=".sf2">
+                </div>
+            </div>
+            <btn id="btnScrollDown"><i class="fas fa-scroll-down"></i></btn>
+        </div>
+        <div id="pianoVisualization">
+            <div id="selection"></div>
+        </div>
+        <div id="piano"></div>
+
+        <div id="presetDropdown">
+            <div id="presetHeader">
+                <div class="presetName">Name</div>
+                <div class="bankID">Bank</div>
+                <div class="presetID">Preset</div>
+            </div>
+            <div id="presetList"></div>
+        </div>
+        <div id="instrumentDropdown">
+            <div id="instrumentHeader">
+                <div class="nameAndVolume">
+                    <div class="instrumentName">Name</div>
+                    <div class="instrumentVolume">Volume</div>
+                </div>
+                <div class="instrumentState">State</div>
+            </div>
+            <div id="instrumentList"></div>
+        </div>
+        <div id="pianoPresetDropdown"></div>
+        <div id="inputSelectWindow"></div>
+        <div id="midiHistoryWindow"></div>
+        <div id="recentMidiFilesWindow"></div>
+        <div id="recentSf2FilesWindow"></div>
+        <div id="recentWavFilesWindow"></div>
+    </body>
+</html>
