@@ -1,0 +1,62 @@
+
+#loadingScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: antiquewhite;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    z-index: 2000;
+}
+#picture-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    perspective: 1000px;
+}
+#picture-container img {
+    width: 100%;
+    height: 100%;
+    filter: grayscale(100%);
+    animation: moveImage 30s linear infinite alternate;
+}
+@keyframes moveImage {
+    0% {transform: translate3d(0, 0, 0);}
+    50% {transform: translate3d(200px, 0, 500px);}
+    100% {transform: translate3d(400px, 0, 1000px);}
+}
+
+#textContainer {
+    position: absolute;
+    height: 20vh;
+    width: 20vw;
+    text-align: center;
+    padding: 3vh;
+    color: #FFF;
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    border: 10px double #000;
+    font-size: 2rem;
+    font-variant: small-caps;
+    margin-bottom: 55vh;
+}
+#progressContainer {
+    position: absolute;
+    width: 80%;
+    background: #CCC;
+    border-radius: 25px;
+    border: 2px solid #000;
+    box-shadow: 0 0 20px 10px #000;
+    margin-top: 30vh;
+}
+#progressBar {
+    position: relative;
+    height: 30px;
+    width: 0;
+    background: linear-gradient(90deg, #00b4d8, #61E294);
+    border-radius: 15px;
+}
