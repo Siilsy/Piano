@@ -29,14 +29,13 @@ Reverb only works when a `.wav` impulse response is provided. Without it, the re
 You can import your own `.wav` files (mono or stereo), or use this file with 134 impulse responses included:  
 🧷 File not included by default for size reasons.
 
-Here's the link to it: 
-[Samplicity – Bricasti IRs version 2023-10.zip (964 Mb)](http://www.samplicity.com/bricasti-m7-impulse-responses/)
+Here's the link to it: [Samplicity Bri M7 Main – 02 – Wave, 32 bit, 48 Khz, v1.1.zip (409 Mb)](https://web.archive.org/web/20190201211631/http://173.255.214.63/m7lib/Samplicity%20M7%20Main%20-%2002%20-%20Wave,%2032%20bit,%2048%20Khz,%20v1.1.zip)
+
+And its most recent version: [Samplicity – Bricasti IRs version 2023-10.zip (964 Mb)](http://www.samplicity.com/bricasti-m7-impulse-responses/)
 
 Recommended external IR packs:
 - [Samplicity Bricasti M7 Impulses (Web Archive)](https://web.archive.org/web/20190201211631/http://www.samplicity.com/bricasti-m7-impulse-responses/)  
   These range from 196MB to 409MB — too large to embed by default.
-
-I personally chose this one: [Samplicity Bri M7 Main – 02 – Wave, 32 bit, 48 Khz, v1.1.zip (409 Mb)](https://web.archive.org/web/20190201211631/http://173.255.214.63/m7lib/Samplicity%20M7%20Main%20-%2002%20-%20Wave,%2032%20bit,%2048%20Khz,%20v1.1.zip)
 
 ---
 
@@ -126,9 +125,9 @@ You can manually “pin” a large .sf2 file to force it to persist in IndexedDB
 
 ## 🧹 Code Notes
 
-- Some features were added over time, so you might find parts of the code that feel inconsistent or unnecessarily complicated — they probably could have been written more cleanly.
-The overall structure isn't always logical either: certain blocks might appear in the middle of unrelated code, and things aren’t always in the order you’d expect.
-In short... it can get pretty messy.
+- Some features were added over time, so you might find parts of the code that feel inconsistent or unnecessarily       complicated — they probably could have been written more cleanly.
+  The overall structure isn't always logical either: certain blocks might appear in the middle of unrelated code, and things aren’t always in the order you’d expect.
+  In short... it can get pretty messy.
 - Variable names are inconsistent in places (you try naming 2,174 variables!)
 - Icons used from [Font Awesome](https://fontawesome.com/) (free tier)
 
