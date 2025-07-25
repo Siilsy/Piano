@@ -921,14 +921,14 @@ function UpdateRecentSf2FilesWindow() {
         }
 
         let fileSize = Math.ceil(blob.size / 1024);
-        let sizeName = 'Ko';
+        let sizeName = 'Kb';
         if (fileSize > 1000) {
             fileSize = Math.ceil(fileSize / 1000);
-            sizeName = 'Mo';
+            sizeName = 'Mb';
         }
         if (fileSize > 1000) {
             fileSize = Math.ceil(fileSize / 1000);
-            sizeName = 'Go';
+            sizeName = 'Gb';
         }
         const size = document.createElement('div');
         size.classList.add('recentSf2FilesSize');
