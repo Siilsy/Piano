@@ -41,7 +41,7 @@ Recommended external IR packs:
 ⚠️ SoundFonts may sound unusually quiet. Some `.sf2` files send instruments to reverb processors at only 11%, 5%, or even 1% volume.  
 This is **not a bug**, it's the original design of the soundfont.
 
-To mitigate this, the app includes a **toggle** to adjust how these effects are handled.
+To mitigate this, the app includes a **toggle** to adjust how these effects are handled when they are activated in the effects window. You will find a button, either green or red and wihtout icon to activate / deactivate the inputs from `.sf2` files and only care about _your_ inputs.
 
 You can import your own `.sf2` files, but some are too large to be saved persistently. Files under 20MB are saved; larger files must be pinned manually in IndexedDB.
 
@@ -74,7 +74,9 @@ The same applies to the **dynamic release** system: it's intentionally basic, an
 
 ## ⌨️ Keyboard Shortcuts (not tooltipped)
 
-Some controls are accessible only via keyboard:
+Some controls are accessible via keyboard as shortcuts.
+
+So when you are on the effects window you can control theses settings via your keyboard when you're on the concerned window:
 
 - **Volume panel**: `↑ ↓` to increase/decrease volume
 - **Panoramic knob**: `W A S D` to move the panner
@@ -103,7 +105,8 @@ If you want to have a piano on your phone, check the first version which was jus
 ## 📦 Storage & Limits
 
 - 🎵 Last **10 MIDI files played** (max 500KB each) are cached
-- 🎶 Last **5 `.sf2` files loaded** (max 20MB each)
+- 🎶 Last **5 `.mid` files loaded** (max 500KB each)
+- 🥁 Last **5 `.sf2` files loaded** (max 20MB each)
 - 🎧 Last **5 `.wav` impulse files** (max 5MB each)
 - ✅ Large files can be "pinned" manually to persist in IndexedDB
 
