@@ -15,11 +15,10 @@ This version introduces advanced audio features, soundfont support, MIDI file ma
 - 📥 Support for `.mid` and `.sf2` files (play, record, export)
 - 🧠 SoundFont buffer storage in RAM or IndexedDB (with size limits)
 - 🎼 Playback system that handles MIDI timing and velocity
-- 🎛️ Custom keyboard mapping for all 88 keys (4 active octaves)
-- 📁 Reverb impulse loading via `.wav` import (optional)
-- 🧩 Simple caching for last-used files (10 MIDI, 5 SF2, 5 WAV)
+- 🎛️ Custom keyboard mapping for all 88 keys (all explained)
+- 📁 Reverb impulse loading via `.wav` import
+- 🧩 Simple caching for last-used files (15 MIDI, 5 SF2, 5 WAV)
 - 🧠 LocalStorage-based persistent state
-- 🕹️ Keyboard shortcuts to control effects directly
 
 ---
 
@@ -104,11 +103,19 @@ If you want to have a piano on your phone, check the first version which was jus
 
 ## 📦 Storage & Limits
 
+All played or loaded files are temporarily stored in RAM so they can be accessed again during the session.
+
+However, only files that are below a certain size limit will be saved persistently and remain available after reloading the site.
+
 - 🎵 Last **10 MIDI files played** (max 500KB each) are cached
 - 🎶 Last **5 `.mid` files loaded** (max 500KB each)
 - 🥁 Last **5 `.sf2` files loaded** (max 20MB each)
 - 🎧 Last **5 `.wav` impulse files** (max 5MB each)
-- ✅ Large files can be "pinned" manually to persist in IndexedDB
+
+Because .sf2 files often exceed 20MB, I implemented a manual pinning system:
+You can manually “pin” a large .sf2 file to force it to persist in IndexedDB, even if it’s too large to be saved automatically.
+
+⚠️ If the storage quota is exceeded, the file will not be saved at all — this is a safety measure to prevent errors and failed imports.
 
 ---
 
