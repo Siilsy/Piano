@@ -1,33 +1,122 @@
-# 🎹 Piano
-A simple handmade virtual piano, very easy to play with and coded mostly in JavaScript!
-#
+# 🎹 Virtual Piano – Version 2.0
 
-## ⌨️ Inputs
-It's a bit hard but you'll understand very quickly how it works.
+A handmade, fully customizable virtual piano coded in HTML, CSS and JavaScript.  
+This version introduces advanced audio features, soundfont support, MIDI file management, and fine control over playback behavior — all directly in your browser.
 
-You can do everything only with your mouse so it's pretty easy, right?
+---
 
-I have 88 keys on my piano but on a normal keyboard, there aren't that many keys. So I had to assign 4 octaves to deal with and assign each octave 12 keys on my keyboard. To change the selected octaves, you can press the first 9 digits. There are 9 octaves from 0 to 8, so the digits from 1 to 9 fit perfectly!
+## 🌟 What's New in Version 2.0
 
-Everything will be explained. First, you need to select an octave to edit, and then you'll choose the target octave with which you want to exchange. This will transfer all your key assignments at the same time! There are two different sets of selected octaves: one for each of the two piano modes. This makes it more practical! But be careful because all the assignations of the new selected octave will disappear!
+- ✅ Rewritten with the **Web Audio API** (no more `Audio()`), allowing:
+  - 🎧 Reverb, Echo, Chorus
+  - 🎚️ Volume & Pan control
+  - 🎛️ ADSR envelope, Dynamic Release
+  - ⚡ Distortion & Effects toggling
+- 📥 Support for `.mid` and `.sf2` files (play, record, export)
+- 🧠 SoundFont buffer storage in RAM or IndexedDB (with size limits)
+- 🎼 Playback system that handles MIDI timing and velocity
+- 🎛️ Custom keyboard mapping for all 88 keys (4 active octaves)
+- 📁 Reverb impulse loading via `.wav` import (optional)
+- 🧩 Simple caching for last-used files (10 MIDI, 5 SF2, 5 WAV)
+- 🧠 LocalStorage-based persistent state
+- 🕹️ Keyboard shortcuts to control effects directly
 
-The keyboard keys for the piano are displayed for a 'QWERTY' keyboard, but it doesn't matter which keyboard layout you have. If you are using 'AZERTY', you just have to remember that the displayed 'Q' on a piano key is actually the 'A' on your keyboard.
+---
 
-I had to find the 48 keyboard keys I needed and it wasn't easy, so I sometimes used rare keys. By default, the keys are strange and can be disturbing, but you have the 'Assignment Button' (a cog) to change the keys. You can also press the 'Delete' button to activate the mode. You will be able to select a note to assign it a new key. You can also put different piano keys on one keyboard key to play a chord. If you want to create a song with certain keys, you can simply activate Assignment Mode and press 'Delete' to delete all the assignments. To delete keys individually, you can choose them, and when you need to assign a new key, press the 'Delete' key and it will delete the assignment.
+## 🎧 Reverb & Impulse Response
 
-You can change the view of the piano with the arrows at the top. The single arrows move you by one note and the double arrows move you by one octave to the left or right. You can also use the directional arrows on your keyboard.
-You also have the small visualization with which you can interact by dragging and dropping the selection part of the piano that you currently see. This will move the part of the piano that you see.
+Reverb only works when a `.wav` impulse response is provided. Without it, the reverb will not function — no sound will be heard if it's enabled with an empty buffer.
 
-##
+You can import your own `.wav` files (mono or stereo), or use this file with 134 impulse responses included:  
+🧷 File not included by default for size reasons.
 
-## 🛠️ Details
-At the beginning, the notes are not going to be playable because they are still loading. I put a Loading Screen for that but it's a bit longer. I tried to add a timer to prevent playing for about 1 second but it doesn't really matter. This also happens when you leave and come back to the page. Just wait a good second and it will be alright!
+Recommended external IR packs:
+- [Samplicity Bricasti M7 Impulses (Web Archive)](https://web.archive.org/web/20190201211631/http://www.samplicity.com/bricasti-m7-impulse-responses/)  
+  These range from 196MB to 409MB — too large to embed by default.
 
-I tried to make a responsive page (adapted to all screen sizes) but I didn't really succeed, but it's roughly correct. I'm sorry, but it will be hard to play on a phone I think... maybe if you turn the phone on its side?
+---
 
-For the beauty of this project, I tried my best... It's just a piano, it didn't need to be THAT beautiful. I tried and I hope I succeeded in making it as beautiful as I could and normally, it's alright. You won't pay attention to these types of details...
+## 🎵 SoundFonts & MIDI
 
-Unfortunately, it's in French, but there isn't much text so it shouldn't be hard to understand (at least I hope).
+⚠️ SoundFonts may sound unusually quiet. Some `.sf2` files send instruments to reverb processors at only 11%, 5%, or even 1% volume.  
+This is **not a bug**, it's the original design of the soundfont.
 
-The project was finished on July 18th, 2024 after several hours of work (something like 50 - 60 hours I think (I was discovering JavaScript)).
-##
+To mitigate this, the app includes a **toggle** to adjust how these effects are handled.
+
+You can import your own `.sf2` files, but some are too large to be saved persistently. Files under 20MB are saved; larger files must be pinned manually in IndexedDB.
+
+Recommended free SF2s (Wayback Machine):
+
+| Name | Size | Link |
+|------|------|------|
+| Creative (emu10k1) 8MBGMSFX | 7.2MB | [🔗 Download](https://archive.org/download/free-soundfonts-sf2-2019-04/Creative%20%28emu10k1%298MBGMSFX.SF2) |
+| airfont_320_neo | 18.8MB | [🔗 Download](https://archive.org/download/free-soundfonts-sf2-2019-04/airfont_320_neo.sf2) |
+| airfont_340 | 76.8MB | [🔗 Download](https://archive.org/download/free-soundfonts-sf2-2019-04/airfont_340.sf2) |
+| airfont_380_final | 263.1MB | [🔗 Download](https://archive.org/download/free-soundfonts-sf2-2019-04/airfont_380_final.sf2) |
+
+> Fully compatible with SoundFont 2 specs, including exclusive class logic.
+
+---
+
+## 🔊 ADSR Behavior
+
+- `.sf2` notes automatically receive a basic ADSR envelope on load.
+- Real recorded piano notes already include their natural decay.
+- When you apply your own ADSR, it **layers on top** of the existing one.
+- This can cause unusual results but is usually subtle and acceptable.
+
+The same applies to the **dynamic release** system: it's intentionally basic, and timing may not feel 100% natural.
+
+---
+
+## ⌨️ Keyboard Shortcuts (not tooltipped)
+
+Some controls are accessible only via keyboard:
+
+- **Volume panel**: `↑ ↓` to increase/decrease volume
+- **Panoramic knob**: `W A S D` to move the panner
+- **Toggle Effects**: `Enter` or `Space` to enable/disable:
+  - Sustain
+  - Reverb
+  - Chorus
+  - ADSR
+  - Echo
+  - Distortion
+
+---
+
+## 📱 Compatibility Notice
+
+⚠️ Not usable on mobile — the screen is too small, and there's no hover interaction on certain buttons.  
+You can still play basic piano notes, but for the full experience, please use a computer.
+
+🛠️ Tested on:  
+> **Laptop model**: HP Pavilion 15 (Windows 10, Chrome)  
+> Not tested on other systems, so bug reports are welcome!
+
+---
+
+## 📦 Storage & Limits
+
+- 🎵 Last **10 MIDI files played** (max 500KB each) are cached
+- 🎶 Last **5 `.sf2` files loaded** (max 20MB each)
+- 🎧 Last **5 `.wav` impulse files** (max 5MB each)
+- ✅ Large files can be "pinned" manually to persist in IndexedDB
+
+---
+
+## 🧹 Code Notes
+
+- Many features were added incrementally → logic may be messy
+- Variable names are inconsistent in places (you try naming 2,174 variables!)
+- Some features interrupt others — sorry in advance!
+- Icons used from [Font Awesome](https://fontawesome.com/) (free tier)
+
+---
+
+## 📜 Project Timeline
+
+| Version | Start | End |
+|---------|-------|-----|
+| **V1** | June 3, 2024 | August 26, 2024 |
+| **V2** | Feb 15, 2025 | July 25, 2025 |
