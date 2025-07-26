@@ -144,7 +144,85 @@ You can manually “pin” a large .sf2 file to force it to persist in IndexedDB
 
 ---
 
-## 📜 Project Timeline
+## 📜 Some short explanation of tricky features
+It may seem a bit tricky at first, but you'll quickly get the hang of it.
+
+You can play everything using just your mouse, so it's easy to try out.
+
+The piano has 88 keys, but a regular keyboard doesn't — so I divided the keyboard into 4 usable octaves, each mapped to 12 keys. You can switch octaves by pressing the digits 1 to 9, which correspond to octaves 0 to 8.
+
+The displayed key labels follow a QWERTY layout, but it works fine with other layouts like AZERTY — just keep in mind that the key shown as "Q" will actually be "A", for example.
+
+Finding 48 usable keyboard keys wasn’t simple, so I had to assign some unusual ones. The default layout might feel odd, but you can change everything using the Assignment Button (the cog).
+All key assignment instructions are clearly explained when you open it for the first time.
+
+---
+
+## 👤 Personal notes
+
+### 🛠️ Details
+At first, the notes won't be playable right away because they’re still loading.
+A loading screen is shown during this short delay — it usually takes less than half a second, so it’s hardly noticeable.
+
+I tried to make the page responsive (adapted to all screen sizes), but I didn't fully succeed.
+On a standard 16:9 computer screen, everything should look fine, but with unusual formats, the layout might appear a bit off. Sorry about that!
+
+As for the visual design — I did my best.
+It's just a piano, so it didn’t need to be stunning, but I still tried to make it look as nice as possible. Hopefully, the result is good enough that you won’t notice the imperfections too much.
+
+The interface is currently only available in English.
+
+The project was completed on July 25th, 2025, after several days of work — probably between 200 and 300 hours in total.
+It turned out to be a much bigger project than I originally expected!
+
+---
+
+### 📍 Origin of the project 
+I created this piano because I was really into learning how to play, and I wanted something simple to practice with.
+At first, I downloaded a piano app from the Microsoft Store (Piano10), but the default key assignments were awful and the features were very limited.
+I tried recording with OBS (or sometimes exporting MP3s), but in reality, the app just created .xscore files that could only be read by itself — completely useless.
+
+Eventually, I got tired of the limitations and decided to build my own piano.
+That app also had default chords, but they weren’t great either. So I basically copied every broken feature from that piano, reworked them, improved them, and made everything easier to use.
+
+The original app only had 31 notes...
+I built a full 88-key piano!
+
+(They’ve actually improved their product since then, and it looks better now, but it's still far away from mine...)
+
+For the sounds, I "borrowed" the audio from an online piano that made 88 network requests at startup — so I was able to grab all the notes quite easily.
+While inspecting other online pianos, I came across one with a visual keyboard preview showing which part of the piano was visible — I liked the idea, so I reused it too.
+
+In short, I didn't plan it, but by exploring various online pianos, I ended up collecting the features I liked and bringing them into my own project. So my piano is like a best-of of online pianos. 
+
+The first version was already promising, but then I wanted to record and replay music.
+At first, I thought of building my own custom format — until I discovered that MIDI files already did exactly what I had in mind.
+It looked great, but the songs I had required more instruments, so I tried downloading extra ones — which was a pain — until I found out about SoundFonts (.sf2). That discovery saved me.
+
+Reading and decoding .sf2 files was incredibly hard. The official spec was 88 pages long, but I pushed through it, and the results were worth the effort.
+
+Later on, I wanted persistent features — so I added LocalStorage and IndexedDB, which turned out to be perfect.
+My piano finally became useful, reliable, and powerful.
+
+Then I added all the effects I wanted — and that was it.
+I had a super complete piano that matched all my expectations.
+
+> In the end... I created something amazing.
+> But the funny thing is — I don't even use it.
+
+---
+
+## 🗺️ Project timeline
+
+**Version 1:**
+- started in July 2024 (Monday, June 3rd, 2024, 19:42:18)
+- finished in August 2024 (Monday, August 26th, 2024, 13:55:22)
+
+**Version 2:**
+- started in February 2025 (Saturday, February 15th, 2025, 23:30:20)
+- paused in April 2025 (around Wednesday, April 23rd, 2025, 23:59:58)
+- resumed on Monday, June 30th, 2025 (around 2 p.m. — file modified at 14:58:30)
+- finished on July 25th, 2025 (Friday, July 25th, 2025, 21:22:30)
 
 | Version | Start | End |
 |---------|-------|-----|
