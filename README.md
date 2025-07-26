@@ -144,7 +144,7 @@ You can manually “pin” a large .sf2 file to force it to persist in IndexedDB
 
 ---
 
-## 📜 Some short explanation of tricky features
+## 📜 Some short explanations of tricky features
 It may seem a bit tricky at first, but you'll quickly get the hang of it.
 
 You can play everything using just your mouse, so it's easy to try out.
