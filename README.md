@@ -1,40 +1,237 @@
-# 🎹 Piano
-A simple handmade virtual piano, very easy to play with and coded mostly in JavaScript!
-#
+# 🎹 Virtual Piano – Version 2.0
 
-## ⌨️ Inputs
-It's a bit hard but you'll understand very quickly how it works.
+A handmade, fully customizable virtual piano coded in HTML, CSS and JavaScript.  
+This version introduces advanced audio features, soundfont support, MIDI file management, and fine control over playback behavior — all directly in your browser.
 
-You can do everything only with your mouse so it's pretty easy, right?
+---
 
-I have 88 keys on my piano but on a normal keyboard, there aren't that many keys. So I had to assign 4 octaves to deal with and assign each octave 12 keys on my keyboard. To change the selected octaves, you can press the first 9 digits. There are 9 octaves from 0 to 8, so the digits from 1 to 9 fit perfectly!
+## 🌟 What's New in Version 2.0
 
-Everything will be explained. First, you need to select an octave to edit, and then you'll choose the target octave with which you want to exchange. This will transfer all your key assignments at the same time! There are two different sets of selected octaves: one for each of the two piano modes. This makes it more practical! But be careful because all the assignations of the new selected octave will disappear!
+- ✅ Rewritten with the **Web Audio API** (no more `Audio()`), allowing:
+  - 🎧 Reverb, Echo, Chorus
+  - 🎚️ Volume & Pan control
+  - 🎛️ ADSR envelope, Dynamic Release
+  - ⚡ Distortion & Effects toggling
+  - 🔔 Metronome feature
+- 📥 Support for `.mid` and `.sf2` files (play, record, export)
+- 🧠 SoundFont buffer storage in RAM or IndexedDB (with size limits)
+- 🎼 Playback system that handles MIDI timing and velocity
+- 🎛️ Custom keyboard mapping for all 88 keys (all explained)
+- 📁 Reverb impulse loading via `.wav` import
+- 🧩 Simple caching for last-used files (15 MIDI, 5 SF2, 5 WAV)
+- 🧠 LocalStorage-based persistent state
 
-The keyboard keys for the piano are displayed for a 'QWERTY' keyboard, but it doesn't matter which keyboard layout you have. If you are using 'AZERTY', you just have to remember that the displayed 'Q' on a piano key is actually the 'A' on your keyboard.
+---
 
-I had to find the 48 keyboard keys I needed and it wasn't easy, so I sometimes used rare keys. By default, the keys are strange and can be disturbing, but you have the 'Assignment Button' (a cog) to change the keys. You can also press the 'Delete' button to activate the mode. You will be able to select a note to assign it a new key. You can also put different piano keys on one keyboard key to play a chord. If you want to create a song with certain keys, you can simply activate Assignment Mode and press 'Delete' to delete all the assignments. To delete keys individually, you can choose them, and when you need to assign a new key, press the 'Delete' key and it will delete the assignment.
+## ▶️ How to run it ?
 
-You can change the view of the piano with the arrows at the top. The single arrows move you by one note and the double arrows move you by one octave to the left or right. You can also use the directional arrows on your keyboard.
-You also have the small visualization with which you can interact by dragging and dropping the selection part of the piano that you currently see. This will move the part of the piano that you see.
+You just have to download everything in the 'Piano' folder, then open it in your computer and open "piano.html", it will open it in a browser like chrome, firefox or others.
 
-The notes are normally named by default with the MIDI notation (C5, C#5, D5 ...), but you can switch to Latin notation (Do, Do#, Re) with the button at the top, which is two circular arrows. And of course, you also have the 'Insert' button.
+---
 
-By default, the notes are very ugly because you don't have Sustain Mode. You can fortunately switch the Mode with the button in the top center, represented by the classic image of the Pedal. Otherwise, the keyboard key for that is 'Alt Right'. 
+## 🎧 Reverb & Impulse Response
 
-To finish, there is also a button to switch between two modes: 'piano mode' and 'keyboard mode'. It's quite simple; one is the basic mode where you can assign one keyboard key to each piano key, and the other allows you to assign as many piano keys as you want to each keyboard key. 
+Reverb only works when a `.wav` impulse response is provided. Without it, the reverb will not function — the casual sound of the piano will be heard if it's enabled with an empty buffer.
 
-I will now explain the little changes that happen with 'keyboard mode', it looks hard but in practice it's really simple. Assigning a new key is similar. You can still remove all the assignments with 'Escape' and change all the piano keys assigned to one keyboard key to another. In this mode, you can select a piano key that is already assigned and assign a new key. To remove a specific keyboard key from a piano key, you can press that key after selecting the piano key. If you press 'Escape' at this moment, all the assignments of this piano key will disappear. 
-##
+You can import your own `.wav` files (mono or stereo), or use this file with 134 impulse responses included:  
+🧷 File not included by default for size reasons.
 
-## 🛠️ Details
-At the beginning, the notes are not going to be playable because they are still loading. I put a Loading Screen for that but it's a bit longer. I tried to add a timer to prevent playing for about 1 second but it doesn't really matter. This also happens when you leave and come back to the page. Just wait a good second and it will be alright!
+Here's the link to it: [Samplicity Bri M7 Main – 02 – Wave, 32 bit, 48 Khz, v1.1.zip (409 Mb)](https://web.archive.org/web/20190201211631/http://173.255.214.63/m7lib/Samplicity%20M7%20Main%20-%2002%20-%20Wave,%2032%20bit,%2048%20Khz,%20v1.1.zip)
 
-I tried to make a responsive page (adapted to all screen sizes) but I didn't really succeed, but it's roughly correct. I'm sorry, but it will be hard to play on a phone I think... maybe if you turn the phone on its side?
+And its most recent version: [Samplicity – Bricasti IRs version 2023-10.zip (964 Mb)](http://www.samplicity.com/bricasti-m7-impulse-responses/)
 
-For the beauty of this project, I tried my best... It's just a piano, it didn't need to be THAT beautiful. I tried and I hope I succeeded in making it as beautiful as I could and normally, it's alright. You won't pay attention to these types of details...
+Recommended external IR packs:
+- [Samplicity Bricasti M7 Impulses (Web Archive)](https://web.archive.org/web/20190201211631/http://www.samplicity.com/bricasti-m7-impulse-responses/)  
+  These range from 196MB to 409MB — too large to embed by default.
 
-Unfortunately, it's in French, but there isn't much text so it shouldn't be hard to understand (at least I hope).
+⚠️ The file will be treated the same whether it’s mono, stereo, left channel, or right channel — so don’t worry too much about what exactly you’re importing.
+Sure, it may not be ultra-realistic, but it’s more than enough: it works well, it sounds fine, and it does the job.
 
-The project was finished on July 18th, 2024 after several hours of work (something like 50 - 60 hours I think (I was discovering JavaScript)).
-##
+---
+
+## 🎵 SoundFonts & MIDI
+
+⚠️ Please note that the overall output level of some instruments — or even specific notes — may sound unexpectedly low. For example, in the best_for_low_data.sf2 soundfont, certain instruments are routed to the reverb effects processor at only 11% of their full level. As a result, they may sound up to 10 times quieter than expected.
+Others are sent at just 1%, making them almost inaudible.
+🎧 This behavior is **not a bug**, nor an issue with this synthesizer — it’s part of the original design of the soundfont itself. While it may seem unusual, that’s how the author intended it.
+
+To mitigate this, the app includes a **toggle** to adjust how these effects are handled when they are activated in the effects window. You will find a button, either green or red and wihtout icon to activate / deactivate the inputs from `.sf2` files and only care about _your_ inputs.
+
+You can import your own `.sf2` files, but some are too large to be saved persistently. Files under 20MB are saved; larger files must be pinned manually in IndexedDB.
+
+Recommended free SF2s (Wayback Machine):
+
+| Name | Size | Link |
+|------|------|------|
+| Creative (emu10k1) 8MBGMSFX | 7.2MB | [🔗 Download](https://archive.org/download/free-soundfonts-sf2-2019-04/Creative%20%28emu10k1%298MBGMSFX.SF2) |
+| airfont_320_neo | 18.8MB | [🔗 Download](https://archive.org/download/free-soundfonts-sf2-2019-04/airfont_320_neo.sf2) |
+| airfont_340 | 76.8MB | [🔗 Download](https://archive.org/download/free-soundfonts-sf2-2019-04/airfont_340.sf2) |
+| airfont_380_final | 263.1MB | [🔗 Download](https://archive.org/download/free-soundfonts-sf2-2019-04/airfont_380_final.sf2) |
+
+Those are the best I came up with (and I heard about the airfont that are apparently really good) but if you want to check it by yourself the best place to do so (for me) is on the WayBack Machine (but you can surely find SoundFonts else where by yourself if you want to!): 
+[WayBack Machine page](https://archive.org/download/free-soundfonts-sf2-2019-04)
+
+> Fully compatible with SoundFont 2 specs !!
+
+---
+
+## 🔊 ADSR Behavior
+
+- `.sf2` notes automatically receive a basic ADSR envelope on load.
+- Real recorded piano notes already include their natural decay.
+- When you apply your own ADSR, it **layers on top** of the existing one.
+- This can cause unusual results but is usually subtle and acceptable.
+
+A **dynamic release** is applied by default when you release a key.
+It can feel quite rough or even awkward, and I fully agree — it’s far from perfect.
+Accurately predicting how long a sound should take to fade out is tricky, and I haven't found a reliable way to improve it yet.
+So yes, it may sound a bit off or unnatural in some cases, but that’s just how it is for now.
+
+I prefer being transparent about this rather than pretending everything works flawlessly.
+
+It only happens on the sounds from `.sf2` files. I mean, there's a dynamic release with the basic piano too but I tried my best to make it as near as perfect as I could and it's fine but for the other intruments, I did not try to find the perfect release time... 
+
+---
+
+## ⌨️ Keyboard Shortcuts (not tooltipped)
+
+Some controls are accessible via keyboard as shortcuts.
+
+So when you are on the effects window you can control theses settings via your keyboard when you're on the concerned window:
+
+- **Volume panel**: `↑ ↓` to increase/decrease volume
+- **Panoramic knob**: `W A S D` to move the panner
+- **Toggle Effects**: `Enter` or `Space` to enable/disable:
+  - Sustain
+  - Reverb
+  - Chorus
+  - ADSR
+  - Echo
+  - Distortion
+
+---
+
+## 📱 Compatibility Notice
+
+⚠️ Not usable on mobile — the screen is too small, and there's no hover interaction on certain buttons.  
+You can still play basic piano notes, but for the full experience, please use a computer.
+If you want to have a piano on your phone, check the first version which was just a simple piano but with way less features, so it's clearly better for you if you just want to play with a basic piano.
+
+🛠️ Tested on:  
+> **Laptop model**: Inspiron 14 5435 (Windows 11, Chrome)  
+> Not tested on other systems, so bug reports are welcome!
+
+---
+
+## 📦 Storage & Limits
+
+All played or loaded files are temporarily stored in RAM so they can be accessed again during the session.
+
+However, only files that are below a certain size limit will be saved persistently and remain available after reloading the site.
+
+- 🎵 Last **10 MIDI files played** (max 500KB each) are cached
+- 🎶 Last **5 `.mid` files loaded** (max 500KB each)
+- 🥁 Last **5 `.sf2` files loaded** (max 20MB each)
+- 🎧 Last **5 `.wav` impulse files** (max 5MB each)
+
+Because .sf2 files often exceed 20MB, I implemented a manual pinning system:
+You can manually “pin” a large .sf2 file to force it to persist in IndexedDB, even if it’s too large to be saved automatically.
+
+⚠️ If the storage quota is exceeded, the file will not be saved at all — this is a safety measure to prevent errors and failed imports.
+
+---
+
+## 🧹 Code Notes
+
+- Some features were added over time, so you might find parts of the code that feel inconsistent or unnecessarily       complicated — they probably could have been written more cleanly.
+  The overall structure isn't always logical either: certain blocks might appear in the middle of unrelated code, and things aren’t always in the order you’d expect.
+  In short... it can get pretty messy.
+- Variable names are inconsistent in places (you try naming 2,174 variables!)
+- Icons used from [Font Awesome](https://fontawesome.com/) (free tier)
+
+---
+
+## 📜 Some short explanations of tricky features
+It may seem a bit tricky at first, but you'll quickly get the hang of it.
+
+You can play everything using just your mouse, so it's easy to try out.
+
+The piano has 88 keys, but a regular keyboard doesn't — so I divided the keyboard into 4 usable octaves, each mapped to 12 keys. You can switch octaves by pressing the digits 1 to 9, which correspond to octaves 0 to 8.
+
+The displayed key labels follow a QWERTY layout, but it works fine with other layouts like AZERTY — just keep in mind that the key shown as "Q" will actually be "A", for example.
+
+Finding 48 usable keyboard keys wasn’t simple, so I had to assign some unusual ones. The default layout might feel odd, but you can change everything using the Assignment Button (the cog).
+All key assignment instructions are clearly explained when you open it for the first time.
+
+---
+
+## 👤 Personal notes
+
+### 🛠️ Details
+At first, the notes won't be playable right away because they’re still loading.
+A loading screen is shown during this short delay — it usually takes less than half a second, so it’s hardly noticeable.
+
+I tried to make the page responsive (adapted to all screen sizes), but I didn't fully succeed.
+On a standard 16:9 computer screen, everything should look fine, but with unusual formats, the layout might appear a bit off. Sorry about that!
+
+As for the visual design — I did my best.
+It's just a piano, so it didn’t need to be stunning, but I still tried to make it look as nice as possible. Hopefully, the result is good enough that you won’t notice the imperfections too much.
+
+The interface is currently only available in English.
+
+The project was completed on July 25th, 2025, after several days of work — probably between 200 and 300 hours in total.
+It turned out to be a much bigger project than I originally expected!
+
+---
+
+### 📍 Origin of the project 
+I created this piano because I was really into learning how to play, and I wanted something simple to practice with.
+At first, I downloaded a piano app from the Microsoft Store (Piano10), but the default key assignments were awful and the features were very limited.
+I tried recording with OBS (or sometimes exporting MP3s), but in reality, the app just created .xscore files that could only be read by itself — completely useless.
+
+Eventually, I got tired of the limitations and decided to build my own piano.
+That app also had default chords, but they weren’t great either. So I basically copied every broken feature from that piano, reworked them, improved them, and made everything easier to use.
+
+The original app only had 31 notes...
+I built a full 88-key piano!
+
+(They’ve actually improved their product since then, and it looks better now, but it's still far away from mine...)
+
+For the sounds, I "borrowed" the audio from an online piano that made 88 network requests at startup — so I was able to grab all the notes quite easily.
+While inspecting other online pianos, I came across one with a visual keyboard preview showing which part of the piano was visible — I liked the idea, so I reused it too.
+
+In short, I didn't plan it, but by exploring various online pianos, I ended up collecting the features I liked and bringing them into my own project. So my piano is like a best-of of online pianos. 
+
+The first version was already promising, but then I wanted to record and replay music.
+At first, I thought of building my own custom format — until I discovered that MIDI files already did exactly what I had in mind.
+It looked great, but the songs I had required more instruments, so I tried downloading extra ones — which was a pain — until I found out about SoundFonts (.sf2). That discovery saved me.
+
+Reading and decoding .sf2 files was incredibly hard. The official spec was 88 pages long, but I pushed through it, and the results were worth the effort.
+
+Later on, I wanted persistent features — so I added LocalStorage and IndexedDB, which turned out to be perfect.
+My piano finally became useful, reliable, and powerful.
+
+Then I added all the effects I wanted — and that was it.
+I had a super complete piano that matched all my expectations.
+
+> In the end... I created something amazing.
+> But the funny thing is — I don't even use it.
+
+---
+
+## 🗺️ Project timeline
+
+**Version 1:**
+- started in July 2024 (Monday, June 3rd, 2024, 19:42:18)
+- finished in August 2024 (Monday, August 26th, 2024, 13:55:22)
+
+**Version 2:**
+- started in February 2025 (Saturday, February 15th, 2025, 23:30:20)
+- paused in April 2025 (around Wednesday, April 23rd, 2025, 23:59:58)
+- resumed on Monday, June 30th, 2025 (around 2 p.m. — file modified at 14:58:30)
+- finished on July 25th, 2025 (Friday, July 25th, 2025, 21:22:30)
+
+| Version | Start | End |
+|---------|-------|-----|
+| **V1** | June 3, 2024 | August 26, 2024 |
+| **V2** | Feb 15, 2025 | July 25, 2025 |
