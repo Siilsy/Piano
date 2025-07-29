@@ -23,6 +23,12 @@ This version introduces advanced audio features, soundfont support, MIDI file ma
 
 ---
 
+## ▶️ How to run it ?
+
+You just have to download everything in the 'Piano' folder, then open it in your computer and open "piano.html", it will open it in a browser like chrome, firefox or others.
+
+---
+
 ## 🎧 Reverb & Impulse Response
 
 Reverb only works when a `.wav` impulse response is provided. Without it, the reverb will not function — the casual sound of the piano will be heard if it's enabled with an empty buffer.
