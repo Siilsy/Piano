@@ -12,6 +12,7 @@ This version introduces advanced audio features, soundfont support, MIDI file ma
   - 🎚️ Volume & Pan control
   - 🎛️ ADSR envelope, Dynamic Release
   - ⚡ Distortion & Effects toggling
+  - 🔔 Metronome feature
 - 📥 Support for `.mid` and `.sf2` files (play, record, export)
 - 🧠 SoundFont buffer storage in RAM or IndexedDB (with size limits)
 - 🎼 Playback system that handles MIDI timing and velocity
