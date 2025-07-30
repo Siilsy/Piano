@@ -1568,3 +1568,14 @@ function UpdateRecentMidiFilesWindow() {
 
     document.querySelector(`#recentMidiFilesWindow > :last-child`).style.borderBottom = 'none';
 }
+
+
+//It's in order to prevent the sliders from being focused when the user clicks on them. So they can use the arrows to move to another octave, note or anything without changing the value of the slider.
+document.querySelectorAll('input[type="range"]').forEach(slider => {
+    slider.addEventListener('mouseup', () => {
+        slider.blur();
+    });
+    slider.addEventListener('touchend', () => {
+        slider.blur();
+    });
+});
