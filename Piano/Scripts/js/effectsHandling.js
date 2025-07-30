@@ -3507,6 +3507,14 @@ metronomeBtn.addEventListener('mouseleave', () => { setTimeout(() => { metronome
 const metronomeSliderBox = CreateHTMLElement('div', metronomeContent, 'metronomeSliderBox', true);
 
 const metronomeSlider = CreateInput('metronomeSlider', '20', '208', defaultMetronomeValue, 'range', metronomeSliderBox);
+
+metronomeSlider.addEventListener('mouseup', () => {
+    metronomeSlider.blur();
+});
+metronomeSlider.addEventListener('touchend', () => {
+    metronomeSlider.blur();
+});
+
 metronomeSlider.value = metronomeBPM;
 metronomeSlider.addEventListener('input', () => {
     metronomeBPM = metronomeSlider.value;
@@ -3516,10 +3524,12 @@ metronomeSlider.addEventListener('input', () => {
 
     localStorage.setItem('metronome', metronomeBPM.toString());
 
-    clearInterval(metronomeInterval);
-    metronomeInterval = setInterval(() => {
-        metronomeNote.play();
-    }, 60000 / metronomeBPM);
+    if (metronomeMode) {
+        clearInterval(metronomeInterval);
+        metronomeInterval = setInterval(() => {
+            metronomeNote.play();
+        }, 60000 / metronomeBPM);
+    }
 });
 
 const metronomeText = CreateHTMLElement('div', metronomeSliderBox, 'metronomeText', true);
