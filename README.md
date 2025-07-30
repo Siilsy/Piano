@@ -117,6 +117,7 @@ So when you are on the effects window you can control theses settings via your k
   - ADSR
   - Echo
   - Distortion
+- **Close window**: 'Escape' to close any opened window
 
 ---
 
