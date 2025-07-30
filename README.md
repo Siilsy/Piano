@@ -27,7 +27,13 @@ This version introduces advanced audio features, soundfont support, MIDI file ma
 
 ## ▶️ How to run it ?
 
-You just have to download everything in the 'Piano' folder, then open it in your computer and open "piano.html", it will open it in a browser like chrome, firefox or others.
+**You can either:**
+- Download everything inside the Piano folder, open it on your computer, and then launch the piano.html file in a browser (like Chrome, Firefox, etc.). This allows you to run a specific version of the piano locally.
+
+**Or:**
+- Simply use the online version via the link above.
+
+  It always runs the latest version, which is more convenient — but not ideal if you need to access an older version.
 
 ---
 
@@ -105,6 +111,7 @@ So when you are on the effects window you can control theses settings via your k
 - **Panoramic knob**: `W A S D` to move the panner
 - **Toggle Effects**: `Enter` or `Space` to enable/disable:
   - Sustain
+  - Metronome
   - Reverb
   - Chorus
   - ADSR
