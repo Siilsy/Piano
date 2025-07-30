@@ -830,6 +830,14 @@ AttachTooltip(document.querySelector('#snapBtnLabel'), 'Snap the knob to main po
 AttachTooltip(document.querySelector('#soundPreviewBtnLabel'), 'Play a \'C4\' each time you release the knob', 300);
 
 const moveSpeedSlider = CreateInput('moveSpeedSlider', -5, 5, 1, 'range', moveSpeedBox);
+
+moveSpeedSlider.addEventListener('mouseup', () => {
+    moveSpeedSlider.blur();
+});
+moveSpeedSlider.addEventListener('touchend', () => {
+    moveSpeedSlider.blur();
+});
+
 moveSpeedSlider.step = '.1';
 const moveSpeedText = CreateHTMLElement('div', moveSpeedBox, 'moveSpeedTxt', true);
 moveSpeedText.innerText = 'Speed : 1';
