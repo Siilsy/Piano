@@ -3518,7 +3518,6 @@ metronomeSlider.addEventListener('input', () => {
 
     clearInterval(metronomeInterval);
     metronomeInterval = setInterval(() => {
-        metronomeNote.setVolume(volumeValue / 100);
         metronomeNote.play();
     }, 60000 / metronomeBPM);
 });
@@ -3543,7 +3542,52 @@ function ReturnTempo(bpm) {
 
 let metronomeNote;
 async function CreateMetronomeAudioVoice() {
-    metronomeNote = await CreateVoice(metronomeSound, true);
+    const gainNode = audioCtx.createGain();
+
+    if (metronomeSound.startsWith("data:")) {
+        metronomeSound = metronomeSound.split(",")[1];
+    }
+    const binary = atob(metronomeSound);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+    let blob = new Blob([bytes], { type: "audio/mp3" });
+
+    const arrayBuffer = await blob.arrayBuffer();
+    const buffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+    const sourceNode = audioCtx.createBufferSource();
+    sourceNode.buffer = buffer;
+
+    metronomeNote = {
+        gainNode,
+        currentSourceNode: null,
+        play: function () {
+            if (this.currentSourceNode) {
+                try { this.currentSourceNode.stop(); } catch { }
+            }
+
+            clearTimeout(this.releaseTimeout);
+
+            const now = audioCtx.currentTime;
+            const gain = this.gainNode.gain;
+
+            gain.cancelScheduledValues(now);
+
+            const vol = this.volume ?? 1;
+            gain.setValueAtTime(vol, now);
+
+            this.gainNode.gain.value = volumeValue / 100;
+
+            const sourceNode = audioCtx.createBufferSource();
+            sourceNode.buffer = buffer;
+            sourceNode.connect(this.gainNode).connect(audioCtx.destination);
+            sourceNode.start(0);
+
+            this.currentSourceNode = sourceNode;
+        }
+    }
 }
 requestAnimationFrame(CreateMetronomeAudioVoice);
 
@@ -3553,7 +3597,6 @@ function ToggleMetronomeMode() {
 
     if (metronomeMode) {
         metronomeInterval = setInterval(() => {
-            metronomeNote.setVolume(volumeValue / 100);
             metronomeNote.play();
         }, 60000 / metronomeBPM);
     } else {
