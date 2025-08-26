@@ -5,6 +5,10 @@ This version introduces advanced audio features, soundfont support, MIDI file ma
 
 👉 The virtual piano is available online here: [https://siilsy.github.io/Piano](https://siilsy.github.io/Piano)
 
+Or, you can download it directly from GitHub — which is where you are right now. Both options have pros and cons:
+ - Even though both versions run in the same browser, they do not share the same memory. This means you won’t be able to access presets saved in one version from the other.
+ - The main advantage of the local version is that it works offline, which can come in handy if you want to play while you’re without an internet connection.
+
 ---
 
 ## 🌟 What's New in Version 2.0
