@@ -199,12 +199,18 @@ It turned out to be a much bigger project than I originally expected!
 ---
 
 ### 📍 Origin of the project 
-I created this piano because I was really into learning how to play, and I wanted something simple to practice with.
+I actually started wanting a simple piano to play for fun back in middle school. 
+During tech class in 9th grade I was bored out of my mind, so I played games on Poki and discovered Piano Tiles on PC. 
+I played at this game on phone and on tablet when I was younger, so I was thrilled by the game. 
+It used 4 computer keys to simulate the screen instead of tapping on the tiles and I loved the idea. 
+A few years later, in high school, I wanted to play it again but the game had disappeared. I looked everywhere for some alternative just to play on a keyboard, but nothing convincing ever showed up, even after installing a few supposedly “promising” apps. 
+
+After searching for a while, I was really into learning how to play, and I wanted something simple to practice with.
 At first, I downloaded a piano app from the Microsoft Store (Piano10), but the default key assignments were awful and the features were very limited.
 I tried recording with OBS (or sometimes exporting MP3s), but in reality, the app just created .xscore files that could only be read by itself — completely useless.
 
 Eventually, I got tired of the limitations and decided to build my own piano.
-That app also had default chords, but they weren’t great either. So I basically copied every broken feature from that piano, reworked them, improved them, and made everything easier to use.
+That app also had default chords, but they weren’t great either. So I basically copied every broken feature from that piano, reworked them, improved them, and made everything easier to use and to access.
 
 The original app only had 31 notes...
 I built a full 88-key piano!
