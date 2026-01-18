@@ -712,6 +712,7 @@ async function CreateVoice(source, isBase64) {
             if (isAdsrUse) {
                 gain.setValueAtTime(0.001, now);
                 gain.exponentialRampToValueAtTime(vol, now + adsrAttack);
+                gain.setValueAtTime(vol, now + adsrAttack + adsrHold);
                 gain.exponentialRampToValueAtTime(vol * adsrSustain, now + adsrAttack + adsrHold + adsrDecay);
             }
             else {
@@ -1674,3 +1675,4 @@ function ResetPianoPreset(mode, presetIndex, presetName) {
         btnToggleSustainMode.classList = sustainMode ? 'active' : 'non-active';
     }
 }
+
