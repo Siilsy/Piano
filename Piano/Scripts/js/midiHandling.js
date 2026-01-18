@@ -111,7 +111,7 @@ const textSpeedValue = document.createElement('span');
 
 const btnTogglingSustainMode = CreateInput('btnTogglingSustainMode', '0', '0', 'auto-toggle', 'checkbox');
 AttachTooltip(btnTogglingSustainMode, 'It\'s not a default parameter because it doesn\'t work really well unfortunately...', 300);
-btnTogglingSustainMode.checked = true;
+btnTogglingSustainMode.checked = false;
 const labelOfBtn = document.createElement('label');
 labelOfBtn.setAttribute("for", 'btnTogglingSustainMode');
 labelOfBtn.textContent = 'Sustain mode\'s auto-toggle';
@@ -1579,3 +1579,4 @@ document.querySelectorAll('input[type="range"]').forEach(slider => {
         slider.blur();
     });
 });
+
