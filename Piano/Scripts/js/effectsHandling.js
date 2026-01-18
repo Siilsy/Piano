@@ -177,6 +177,10 @@ function ScrollNextWindow() {
 let animationTimeout;
 function Rotate(direction) {
     if (animationTimeout) return;
+
+    //Stop the recording of the panoramic path if you change the window
+    if (recordBtnState == 1) recordBtn.click();
+
     const index = currentPage + direction;
     const angle = -index * (360 / total);
 
@@ -562,23 +566,44 @@ document.addEventListener('keydown', (event) => {
 });
 
 
-// ________________________________________________________________________________________________
+// _______________________________ Creating the final piano output ________________________________
 
 
-const globalGain = audioCtx.createGain();
-const globalPanL = audioCtx.createGain();
-const globalPanR = audioCtx.createGain();
-const merger = audioCtx.createChannelMerger(2);
+const compressor = audioCtx.createDynamicsCompressor();
+compressor.threshold.value = -30;
+compressor.knee.value = 30;
+compressor.ratio.value = 3;
+compressor.attack.value = 0.01;
+compressor.release.value = 0.2;
 
-globalGain.connect(globalPanL);
-globalGain.connect(globalPanR);
+const makeUpGain = audioCtx.createGain();
+makeUpGain.gain.value = 2.0;
 
-globalPanL.connect(merger, 0, 0);
-globalPanR.connect(merger, 0, 1);
+const limiter = audioCtx.createDynamicsCompressor();
+limiter.threshold.value = -0.5;
+limiter.knee.value = 0;
+limiter.ratio.value = 20;
+limiter.attack.value = 0;
+limiter.release.value = 0.5;
 
-merger.connect(audioCtx.destination);
 
-globalGain.gain.value = 1.5;
+compressor.connect(makeUpGain);
+makeUpGain.connect(limiter);
+limiter.connect(audioCtx.destination);
+
+
+// __________________________________________ Panoramic ___________________________________________
+
+
+const pannerNode = audioCtx.createPanner();
+
+pannerNode.panningModel = 'HRTF';
+pannerNode.distanceModel = 'inverse';
+pannerNode.refDistance = 1;
+pannerNode.maxDistance = 10000;
+pannerNode.rolloffFactor = 1;
+
+pannerNode.connect(compressor);
 
 const panoramicContent = document.createElement('div');
 panoramicContent.id = 'panoramicContent';
@@ -699,6 +724,18 @@ function PanoramicOnMouseUp() {
 }
 
 
+//The maximum distances from the major points to know if you left the zone of the snap and if you did I can snap again but if you stayed in the zone the knob won't snap again in order for you to move freely near the major point with the snap mode activated
+let maxDstToSnapPoints = Array(panoramicMajorPoints.length).fill(0);
+let maxDstToFirstPoint = 0;
+//Threshold time to stop the snap to a point in order for the user to snap easily to a point and after this threshold if he continues moving it will stop to snap automatically. It uses lastSnap and thresholdSnapTime
+let lastSnap = performance.now();
+const thresholdSnapTime = 500;
+//Threshold of the distance to snap the knob to a major point saved at the beginning
+const thresholdSnapDst = .25;
+//Threshold of the distance to snap the knob to the first point of the recording
+const thresholdSnapDstToFirstPoint = .1;
+//Threshold to know when you can record a new point if you're far away enough from the last point
+const thresholdDstToLastPoint = .03;
 function PanoramicOnMouseMove(e) {
     if (effectsContainer.style.display == 'none' || currentPage != 1 || !panoramicDragging) return;
 
@@ -714,11 +751,17 @@ function PanoramicOnMouseMove(e) {
     let y = ((e.clientY - rect.top) / rect.height) * 4 - 2;
 
     if (snapBtn.checked) {
-        for (let [dx, dy] of panoramicMajorPoints) {
+        for (let i = 0; i < panoramicMajorPoints.length; i++) {
+            [dx, dy] = panoramicMajorPoints[i];
             const dst = Math.hypot(dx - x, dy - y);
-            if (dst < .25) {
+            if (dst > maxDstToSnapPoints[i]) maxDstToSnapPoints[i] = dst;
+
+            if (dst < thresholdSnapDst && (maxDstToSnapPoints[i] > thresholdSnapDst || performance.now() - lastSnap < thresholdSnapTime)) {
                 x = dx;
                 y = dy;
+
+                maxDstToSnapPoints[i] = 0;
+                if (performance.now() - lastSnap > thresholdSnapTime) lastSnap = performance.now();
             }
         }
     }
@@ -731,14 +774,18 @@ function PanoramicOnMouseMove(e) {
             movePath.setAttribute("d", `M ${x},${y}`);
         } else {
             const dstToFirstPoint = Math.hypot(recordedPath[0][0] - x, recordedPath[0][1] - y);
-            if (recordedPath.length > 5 && dstToFirstPoint < .1) {
+            if (dstToFirstPoint > maxDstToFirstPoint) maxDstToFirstPoint = dstToFirstPoint;
+            if (dstToFirstPoint < thresholdSnapDstToFirstPoint && (maxDstToFirstPoint > thresholdSnapDstToFirstPoint || performance.now() - lastSnap < thresholdSnapTime)) {
                 x = recordedPath[0][0];
                 y = recordedPath[0][1];
+
+                maxDstToFirstPoint = 0;
+                if (performance.now() - lastSnap > thresholdSnapTime) lastSnap = performance.now();
             }
 
             const lastPoint = recordedPath[recordedPath.length - 1];
             const dstToLastPoint = Math.hypot(lastPoint[0] - x, lastPoint[1] - y);
-            if (dstToLastPoint > .03) {
+            if (dstToLastPoint > thresholdDstToLastPoint) {
                 recordedPath.push([x, y, performance.now() - startOfRecording]);
 
                 let d = movePath.getAttribute('d');
@@ -766,18 +813,14 @@ function SetPanoramicValues(x, y) {
     SetGlobalPan(x, y);
 }
 
-function SetGlobalPan(x, y) {
-    const distanceL = Math.max(Math.hypot(x + 1, y), 0.4);
-    const distanceR = Math.max(Math.hypot(x - 1, y), 0.4);
+function SetGlobalPan(x, z, y = 0) {
+    const now = audioCtx.currentTime;
 
-    const areaL = Math.PI * distanceL * distanceL;
-    const areaR = Math.PI * distanceR * distanceR;
+    const rampTime = 0.1;
 
-    const volL = 1 / areaL;
-    const volR = 1 / areaR;
-
-    globalPanL.gain.value = volL;
-    globalPanR.gain.value = volR;
+    pannerNode.positionX.setTargetAtTime(x, now, rampTime);
+    pannerNode.positionY.value = y;
+    pannerNode.positionZ.setTargetAtTime(z, now, rampTime);
 }
 SetGlobalPan(0, 0);
 
@@ -862,12 +905,16 @@ snapBtn.addEventListener('click', () => {
     if (!snapBtn.checked) return;
     let x = parseFloat(panoramicKnob.getAttribute('cx'));
     let y = parseFloat(panoramicKnob.getAttribute('cy'));
-    
-    for (let [dx, dy] of panoramicMajorPoints) {
+
+    for (let i = 0; i < panoramicMajorPoints.length; i++) {
+        [dx, dy] = panoramicMajorPoints[i];
         const dst = Math.hypot(dx - x, dy - y);
-        if (dst < .25) {
+        if (dst < thresholdSnapDst) {
             x = dx;
             y = dy;
+
+            maxDstToSnapPoints[i] = 0;
+            lastSnap = performance.now();
         }
     }
 
@@ -882,6 +929,7 @@ soundPreviewBtn.addEventListener('click', () => {
 
 let panoramicAnimationId = null;
 let playHead = 0;
+let playingForward = true;
 function AnimatePanoramic() {
     if (recordBtnState == 1) recordBtn.click();
 
@@ -919,7 +967,6 @@ function AnimatePanoramic() {
 
         let pathStartTime = null;
         let lastTimestamp = null;
-        let playingForward = true;
         const pathDuration = recordedPath[recordedPath.length - 1][2];
 
         function FollowPath(timestamp) {
@@ -972,6 +1019,149 @@ function AnimatePanoramic() {
 
         panoramicAnimationId = requestAnimationFrame(FollowPath);
     }
+}
+
+const panoramicTimeouts = [];
+let isRotatingInBackground = false;
+window.addEventListener('blur', () => {
+    if (!rotateBtn.checked) return;
+
+    AnimatePanoramicInBackground();
+
+    if (panoramicAnimationId) {
+        cancelAnimationFrame(panoramicAnimationId);
+        panoramicAnimationId = null;
+    }
+})
+window.addEventListener('focus', () => {
+    if (!rotateBtn.checked) return;
+
+    StopAnimatePanoramicInBackground();
+
+    AnimatePanoramic();
+});
+
+function AnimatePanoramicInBackground() {
+    isRotatingInBackground = true;
+
+    //The interval between 2 updates of the panoramic changing
+    const timeInterval = 50;
+    //The number of iterations to schedule
+    const numberOfIterationsToDo = 100;
+
+    if (!playModeBtn.checked) {
+        const cx = parseFloat(panoramicKnob.getAttribute('cx'));
+        const cy = parseFloat(panoramicKnob.getAttribute('cy'));
+
+        let angleRad = Math.atan2(cy, cx);
+        if (cx == 0 && cy == 0) angleRad = -Math.PI / 2;
+
+        function ScheduleNextPanoramicValues() {
+            if (!isRotatingInBackground) return;
+
+            panoramicTimeouts.length = 0;
+
+            for (let i = 0; i < numberOfIterationsToDo; i++) {
+                panoramicTimeouts.push(
+                    setTimeout(() => {
+                        angleRad -= Math.PI / (18 * 1000 / timeInterval) * moveSpeedSlider.value;
+                        angleRad = angleRad % (Math.PI * 2);
+    
+                        const x = onlyYBtn.checked ? 0 : Math.cos(angleRad) * 1.5;
+                        const y = onlyXBtn.checked ? 0 : Math.sin(angleRad) * 1.5;
+    
+                        SetPanoramicValues(x, y);
+
+                        if (i == numberOfIterationsToDo - 1) {
+                            ScheduleNextPanoramicValues();
+                        }
+                    }, timeInterval * i)
+                );
+            }
+        }
+        ScheduleNextPanoramicValues();
+    } else {
+        if (recordedPath.length == 0) return;
+
+        let pathStartTime = null;
+        let lastTimestamp = null;
+        const pathDuration = recordedPath[recordedPath.length - 1][2];
+
+        function ScheduleNextPanoramicValues() {
+            if (!isRotatingInBackground) return;
+
+            panoramicTimeouts.length = 0;
+
+            for (let i = 0; i < numberOfIterationsToDo; i++) {
+                panoramicTimeouts.push(
+                    setTimeout(() => {
+                        timestamp = performance.now();
+
+                        if (!pathStartTime) {
+                            pathStartTime = timestamp;
+                            lastTimestamp = timestamp;
+                        }
+
+                        const deltaTime = (timestamp - lastTimestamp);
+                        lastTimestamp = timestamp;
+
+                        const rawSpeed = moveSpeedSlider.value;
+                        const speed = Math.abs(rawSpeed) / 2;
+                        let direction = playingForward ? 1 : -1;
+                        direction *= rawSpeed >= 0 ? 1 : -1;
+
+                        playHead += deltaTime * speed * direction;
+
+                        direction = direction == 1 ? true : false;
+
+                        if (loopModeBtn.checked) {
+                            if (playHead > pathDuration) playHead = 0;
+                            if (playHead < 0) playHead = pathDuration;
+                        } else {
+                            if (direction && playHead > pathDuration) {
+                                playHead = pathDuration;
+                                playingForward = !playingForward;
+                            } else if (!direction && playHead < 0) {
+                                playHead = 0;
+                                playingForward = !playingForward;
+                            }
+                        }
+
+                        let n = 0;
+                        while (n < recordedPath.length - 1 && recordedPath[n + 1][2] < playHead) {
+                            n++;
+                        }
+
+                        const [x1, y1, t1] = recordedPath[n];
+                        const [x2, y2, t2] = recordedPath[n + 1];
+
+                        const alpha = (playHead - t1) / (t2 - t1);
+                        const x = onlyYBtn.checked ? 0 : x1 + (x2 - x1) * alpha;
+                        const y = onlyXBtn.checked ? 0 : y1 + (y2 - y1) * alpha;
+
+                        SetPanoramicValues(x, y);
+
+                        if (i == numberOfIterationsToDo - 1) {
+                            ScheduleNextPanoramicValues();
+                        }
+                    }, timeInterval * i)
+                );
+            }
+        }
+        ScheduleNextPanoramicValues();
+    }
+}
+function StopAnimatePanoramicInBackground() {
+    isRotatingInBackground = false;
+
+    const x = parseFloat(panoramicKnob.getAttribute('cx'));
+    const y = parseFloat(panoramicKnob.getAttribute('cy'));
+    SetPanoramicValues(x, y);
+
+    for (const timeout of panoramicTimeouts) {
+        clearTimeout(timeout);
+    }
+    panoramicTimeouts.length = 0;
 }
 
 
@@ -1088,16 +1278,15 @@ loopModeBtn.addEventListener('click', () => {
 
 
 window.addEventListener('blur', () => {
-    if (rotateBtn.checked) {
-        SetPanoramicValues(0, 0);
-    }
-
     if (eventMoveAnimationId != null) {
         panoramicPressedKeys = new Set();
 
         cancelAnimationFrame(eventMoveAnimationId);
         eventMoveAnimationId = null;
     }
+
+    //Stop the recording of the panoramic path if you leave the window
+    if (recordBtnState == 1) recordBtn.click();
 });
 
 
@@ -1132,6 +1321,57 @@ function HandleEventMovement() {
     if (panoramicPressedKeys.has('KeyS')) y += 0.01;
     if (panoramicPressedKeys.has('KeyD')) x += 0.01;
 
+    if (snapBtn.checked) {
+        for (let i = 0; i < panoramicMajorPoints.length; i++) {
+            [dx, dy] = panoramicMajorPoints[i];
+            const dst = Math.hypot(dx - x, dy - y);
+            if (dst > maxDstToSnapPoints[i]) maxDstToSnapPoints[i] = dst;
+
+            if (dst < thresholdSnapDst && (maxDstToSnapPoints[i] > thresholdSnapDst || performance.now() - lastSnap < thresholdSnapTime)) {
+                x = dx;
+                y = dy;
+
+                maxDstToSnapPoints[i] = 0;
+                if (performance.now() - lastSnap > thresholdSnapTime) lastSnap = performance.now();
+            }
+        }
+    }
+
+    if (recordBtnState == 1) {
+        if (recordedPath.length == 0) {
+            startOfRecording = performance.now();
+            recordedPath.push([x, y, 0]);
+
+            movePath.setAttribute("d", `M ${x},${y}`);
+        } else {
+            const dstToFirstPoint = Math.hypot(recordedPath[0][0] - x, recordedPath[0][1] - y);
+            if (dstToFirstPoint > maxDstToFirstPoint) maxDstToFirstPoint = dstToFirstPoint;
+            if (dstToFirstPoint < thresholdSnapDstToFirstPoint && (maxDstToFirstPoint > thresholdSnapDstToFirstPoint || performance.now() - lastSnap < thresholdSnapTime)) {
+                x = recordedPath[0][0];
+                y = recordedPath[0][1];
+
+                maxDstToFirstPoint = 0;
+                if (performance.now() - lastSnap > thresholdSnapTime) lastSnap = performance.now();
+            }
+
+            const lastPoint = recordedPath[recordedPath.length - 1];
+            const dstToLastPoint = Math.hypot(lastPoint[0] - x, lastPoint[1] - y);
+            if (dstToLastPoint > thresholdDstToLastPoint) {
+                recordedPath.push([x, y, performance.now() - startOfRecording]);
+
+                let d = movePath.getAttribute('d');
+                if (loopModeBtn.checked) d = d.slice(0, -1);
+
+                d += `L ${x},${y}`;
+                if (loopModeBtn.checked) d += 'Z';
+
+                movePath.setAttribute("d", d);
+
+                if (recordedPath.length >= MAX_PATH_POINTS) recordBtn.click();
+            }
+        }
+    }
+
     SetPanoramicValues(x, y);
 
     eventMoveAnimationId = requestAnimationFrame(HandleEventMovement);
@@ -1159,16 +1399,22 @@ let impulseResponseBuffer = null; //Audio file to simulate the environment that 
 const reverbDryGain = audioCtx.createGain();
 const reverbWetGain = audioCtx.createGain();
 const reverbConvolver = audioCtx.createConvolver();
-const reverbFilter = audioCtx.createBiquadFilter();
+const reverbLowPassFilter = audioCtx.createBiquadFilter();
 const reverbOutput = audioCtx.createGain();
 const reverbSendGain = audioCtx.createGain();
 
 reverbConvolver.buffer = impulseResponseBuffer;
-reverbFilter.type = "lowpass";
-reverbFilter.frequency.value = 8000; //Default value but doesn't really matter anyway because it will be changed later so it's useless...
+reverbLowPassFilter.type = "lowpass";
+reverbLowPassFilter.frequency.value = 8000; //Default value but doesn't really matter anyway because it will be changed later so it's useless...
+
+//Connect an high pass filter to filter the useless low frequencies that make the crackling sounds
+const reverbHighPassFilter = audioCtx.createBiquadFilter();
+reverbHighPassFilter.type = "highpass";
+reverbHighPassFilter.frequency.value = 600;
+reverbHighPassFilter.Q.value = 0.5;
 
 reverbDryGain.connect(reverbOutput);
-reverbWetGain.connect(reverbConvolver).connect(reverbFilter).connect(reverbOutput);
+reverbWetGain.connect(reverbConvolver).connect(reverbLowPassFilter).connect(reverbHighPassFilter).connect(reverbOutput);
 
 const reverbInput = audioCtx.createGain();
 reverbInput.connect(reverbDryGain);
@@ -1182,13 +1428,13 @@ const reverbNode = {
         reverbWetGain.gain.value = mix;
     },
     SetHighFreq(val) {
-        reverbFilter.frequency.value = 1000 + val * 9000;
+        reverbLowPassFilter.frequency.value = 1000 + val * 9000;
     }
 };
 
 reverbNode.SetMix(localStorage.getItem('reverb').split(';')[0] === '0' ? reverbMix : 0);
 reverbNode.SetHighFreq(reverbFreq);
-reverbNode.output.connect(globalGain);
+reverbNode.output.connect(pannerNode);
 
 const reverbContent = CreateHTMLElement('div', document.querySelector('#reverbScreen'), 'reverbContent', true);
 
@@ -3600,7 +3846,7 @@ async function CreateMetronomeAudioVoice() {
 
             const sourceNode = audioCtx.createBufferSource();
             sourceNode.buffer = buffer;
-            sourceNode.connect(this.gainNode).connect(audioCtx.destination);
+            sourceNode.connect(this.gainNode).connect(compressor);
             sourceNode.start(0);
 
             this.currentSourceNode = sourceNode;
