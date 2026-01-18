@@ -2078,7 +2078,7 @@ const chorusNode = {
     }
 };
 
-chorusNode.SetMix(0); //0 because at the lauching the chorus is deactivated
+chorusNode.SetMix(0); //0 because at the lauching the chorus is disabled
 chorusNode.SetDelayTime(chorusDelayTime);
 chorusNode.SetLfo(chorusRate);
 chorusNode.SetLfoGain(chorusDepth);
@@ -2996,7 +2996,7 @@ const echoNode = {
 };
 
 //Initialization
-echoNode.SetMix(0); //Deactivated at the beginning
+echoNode.SetMix(0); //disabled at the beginning
 echoNode.SetDelay(echoDelay);
 echoNode.SetFeedback(echoFeedback);
 
@@ -3020,7 +3020,7 @@ const echoActivateBtn = CreateHTMLElement('btn', echoTop, 'echoActivateBtn', tru
     echoActivateBtn.appendChild(i);
 }
 const echoMask = CreateHTMLElement('div', echoContent, 'echoMask', true);
-ChangeDisplay([echoMask], 1); //By default it's deactivated
+ChangeDisplay([echoMask], 1); //By default it's disabled
 echoActivateBtn.addEventListener('click', () => {
     if (echoMask.style.display === 'flex') {
         ChangeDisplay([echoMask], 0);
@@ -3401,7 +3401,7 @@ const distortionNode = {
     }
 };
 
-distortionNode.SetMix(0); //By default it's deactivated
+distortionNode.SetMix(0); //By default it's disabled
 distortionNode.SetBandWidth(distortionBandWidth);
 distortionNode.SetHighFreq(distortionLowPass);
 distortionNode.output.connect(echoNode.input);
@@ -3424,7 +3424,7 @@ const distortionActivateBtn = CreateHTMLElement('btn', distortionTop, 'distortio
     distortionActivateBtn.appendChild(i);
 }
 const distortionMask = CreateHTMLElement('div', distortionContent, 'distortionMask', true);
-ChangeDisplay([distortionMask], 1); //By default it's deactivated
+ChangeDisplay([distortionMask], 1); //By default it's disabled
 distortionActivateBtn.addEventListener('click', () => {
     if (distortionMask.style.display === 'flex') {
         ChangeDisplay([distortionMask], 0);
@@ -3748,7 +3748,7 @@ document.addEventListener('keydown', (event) => {
 const defaultMetronomeValue = 60;
 if (!localStorage.getItem('metronome')) localStorage.setItem('metronome', defaultMetronomeValue.toString());
 let metronomeBPM = localStorage.getItem('metronome');
-let metronomeMode = false; //By default it's deactivated
+let metronomeMode = false; //By default it's disabled
 
 const metronomeContent = CreateHTMLElement('div', document.querySelector('#metronomeScreen'), 'metronomeContent', true);
 
