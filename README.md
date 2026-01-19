@@ -169,12 +169,11 @@ You can manually “pin” a large .sf2 file to force it to persist in IndexedDB
 
 The audio engine is based on a complex architecure of nearly 50 connections, including an effects chain and final mastering.
 
-<a href="./docs/AudioConnectionPlan.svg">
-  <img src="./docs/AudioConnectionPlan.svg" alt="Pipeline Audio" style="max-width: 100%; height: auto;">
-</a>
-You can click on the diagram to open it in high resolution and zoom in on specific nodes (ADSR, Filters, Mastering).
 
-> 💡 **Note :** The Visio source file is available [here](./docs/AudioConnectionPlan.vsdx).
+<img src="./docs/AudioConnectionPlan.svg" alt="Pipeline Audio" style="max-width: 100%; height: auto;">
+
+
+> 💡 **Note :** The image above is a preview. For a full technical deep dive and high-precision zoom, please download the **[Visio source file here](./docs/AudioConnectionPlan.vsdx)**.
 
 ---
 
