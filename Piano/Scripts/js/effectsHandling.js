@@ -729,7 +729,7 @@ let maxDstToSnapPoints = Array(panoramicMajorPoints.length).fill(0);
 let maxDstToFirstPoint = 0;
 //Threshold time to stop the snap to a point in order for the user to snap easily to a point and after this threshold if he continues moving it will stop to snap automatically. It uses lastSnap and thresholdSnapTime
 let lastSnap = performance.now();
-const thresholdSnapTime = 500;
+const thresholdSnapTime = 1000;
 //Threshold of the distance to snap the knob to a major point saved at the beginning
 const thresholdSnapDst = .25;
 //Threshold of the distance to snap the knob to the first point of the recording
@@ -821,8 +821,17 @@ function SetGlobalPan(x, z, y = 0) {
     pannerNode.positionX.setTargetAtTime(x, now, rampTime);
     pannerNode.positionY.value = y;
     pannerNode.positionZ.setTargetAtTime(z, now, rampTime);
+
+    const distance = Math.hypot(x, y, z);
+
+    //Edit of the reverb send gains to make it sound further away if needed
+    const dryMod = Math.max(0.5, 1 - (distance * 0.1));
+    const wetMod = 1 + (distance * 0.5);
+
+    reverbDryDistanceGain.gain.setTargetAtTime(dryMod, now, rampTime);
+    reverbWetDistanceGain.gain.setTargetAtTime(wetMod, now, rampTime);
 }
-SetGlobalPan(0, 0);
+requestAnimationFrame(() => { SetGlobalPan(0, 0); });
 
 
 const panoramicTitle = document.querySelector('#panoramicScreen').firstChild;
@@ -1402,6 +1411,8 @@ const reverbConvolver = audioCtx.createConvolver();
 const reverbLowPassFilter = audioCtx.createBiquadFilter();
 const reverbOutput = audioCtx.createGain();
 const reverbSendGain = audioCtx.createGain();
+const reverbDryDistanceGain = audioCtx.createGain();
+const reverbWetDistanceGain = audioCtx.createGain();
 
 reverbConvolver.buffer = impulseResponseBuffer;
 reverbLowPassFilter.type = "lowpass";
@@ -1417,8 +1428,8 @@ reverbDryGain.connect(reverbOutput);
 reverbWetGain.connect(reverbConvolver).connect(reverbLowPassFilter).connect(reverbHighPassFilter).connect(reverbOutput);
 
 const reverbInput = audioCtx.createGain();
-reverbInput.connect(reverbDryGain);
-reverbInput.connect(reverbSendGain).connect(reverbWetGain);
+reverbInput.connect(reverbDryDistanceGain).connect(reverbDryGain);
+reverbInput.connect(reverbSendGain).connect(reverbWetDistanceGain).connect(reverbWetGain);
 
 const reverbNode = {
     input: reverbInput,
