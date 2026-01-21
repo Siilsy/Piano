@@ -3,7 +3,7 @@
 A handmade, fully customizable virtual piano coded in HTML, CSS and JavaScript.  
 This version introduces advanced audio features, soundfont support, MIDI file management, and fine control over playback behavior — all directly in your browser.
 
-👉 The virtual piano is available online here: [https://siilsy.github.io/Piano](https://siilsy.github.io/Piano)
+👉 The virtual piano is available online here: [https://maelangallais.github.io/Piano](https://maelangallais.github.io/Piano)
 
 Or, you can download it directly from GitHub — which is where you are right now. Both options have pros and cons:
  - Even though both versions run in the same browser, they do not share the same memory. This means you won’t be able to access presets saved in one version from the other.
