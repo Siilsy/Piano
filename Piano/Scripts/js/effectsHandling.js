@@ -3328,9 +3328,9 @@ function UpdateEchoTexts(slider) {
         echoMixValue.textContent = value + ' %';
     }
     if (slider == 2 || all) {
-        const value = Math.round(echoFeedback * 100) / 100;
+        const value = Math.round(echoFeedback * 100);
         const length = value.toString().length;
-        echoFeedbackValue.textContent = (length == 3 ? value + '0' : length == 1 ? value + '.00' : value) + ' s';
+        echoFeedbackValue.textContent = value + ' %';
     }
 }
 UpdateEchoTexts(3);
@@ -4066,3 +4066,4 @@ function UpdateEventListeners(previousWindow, nextWindow) {
         //Nothing to do here for metronome but I keep this if statement "in case of" .. ??
     }
 }
+
