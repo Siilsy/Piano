@@ -513,14 +513,14 @@ async function playSound(key, pressing = 0, volume = 1, canal = 256) {
 
         //Change the volume of the dry gain of the chorus input as wanted by the generator number 15 in the SF2 files
         let chorusMixValue = 1;
-        if (parseInt(inst.split(':')[1]) != 128 && genChorus.has(inst) && isSf2UsedForChorus) {
+        if (parseInt(inst.split(':')[1]) != 128 && genChorus.has(inst) && genChorus.get(inst).has(key) && isSf2UsedForChorus) {
             chorusMixValue = genChorus.get(inst).get(key);
         }
         chorusSendGain.gain.value = chorusMixValue;
 
         //Change the volume of the dry gain of the reverb input as wanted by the generator number 16 in the SF2 files
         let reverbMixValue = 1;
-        if (parseInt(inst.split(':')[1]) != 128 && genReverb.has(inst) && isSf2UsedForReverb) {
+        if (parseInt(inst.split(':')[1]) != 128 && genReverb.has(inst) && genReverb.get(inst).has(key) && isSf2UsedForReverb) {
             reverbMixValue = genReverb.get(inst).get(key);
         }
         reverbSendGain.gain.value = reverbMixValue;
@@ -1675,4 +1675,5 @@ function ResetPianoPreset(mode, presetIndex, presetName) {
         btnToggleSustainMode.classList = sustainMode ? 'active' : 'non-active';
     }
 }
+
 
