@@ -910,6 +910,7 @@ let speedValue = speedSlider.value;
 let volumeValue = volumeSlider.value;
 
 const MAX_MID_FILE_SIZE = 500_000; //The maximum size for a .mid to be saved in IndexedDB is 500 Ko
+const MAX_MID_FILES = 10; //The maximum number of MIDI files to be saved in the IndexedDB
 
 const midiFilesStorage = new Storage();
 let recentMidiFiles = new Map();
@@ -1530,7 +1531,7 @@ function UpdateRecentMidiFilesWindow() {
                 //Save to recentMidiFiles
                 recentMidiFiles = recentMidiFiles.filter(file => file[0] !== name);
                 recentMidiFiles.unshift([name, blob]);
-                if (recentMidiFiles.length > 5) {
+                if (recentMidiFiles.length > MAX_MID_FILES) {
                     recentMidiFiles.pop();
                 }
                 UpdateRecentMidiFilesWindow();
@@ -1579,4 +1580,5 @@ document.querySelectorAll('input[type="range"]').forEach(slider => {
         slider.blur();
     });
 });
+
 
