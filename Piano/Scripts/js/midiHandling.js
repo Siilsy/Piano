@@ -1072,7 +1072,7 @@ async function MidiFileLoaded() {
 
     DisplayButtons();
     StartMusic();
-    updateTime();
+    UpdateTime();
 
     if (!sustainMode) ToggleSustainMode();
 }
@@ -1133,7 +1133,7 @@ function PlayMidiFile() {
         } else {
             startTime += current - startPauseTime;
         }
-        updateTime();
+        UpdateTime();
     } else {
         StopAllNotes();
 
@@ -1141,7 +1141,7 @@ function PlayMidiFile() {
     }
 }
 
-function updateTime() {
+function UpdateTime() {
     if (!isPlaying) return;
 
     const now = performance.now();
@@ -1176,7 +1176,7 @@ function updateTime() {
         }
     }
 
-    requestAnimationFrame(updateTime);
+    requestAnimationFrame(UpdateTime);
 }
 
 let instrumentSelectionTimer = [];
@@ -1580,5 +1580,3 @@ document.querySelectorAll('input[type="range"]').forEach(slider => {
         slider.blur();
     });
 });
-
-
