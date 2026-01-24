@@ -351,6 +351,9 @@
     height: 5vw;
     cursor: pointer;
 }
+#recentMidiFilesWindow .recentFilesRow {
+    height: 3.8vw !important;
+}
 .recentMidiFilesName {
     position: relative;
     display: block;
@@ -359,7 +362,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 90%;
-    font-size: 1.5vw;
+    font-size: 1.3vw;
 }
 .recentSf2FilesNameBox {
     position: relative;
@@ -419,3 +422,4 @@
 .tooHeavySf2 {
     background-color: #c88 !important;
 }
+
