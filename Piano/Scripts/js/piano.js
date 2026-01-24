@@ -1074,7 +1074,7 @@ document.addEventListener('keydown', (event) => {
         timeOut = setTimeout(() => {
             selectedKey = [];
             selectionContainer.style.display = 'none';
-            ChangeMode();
+            changeMode();
             updateKeyShortcut();
             timeOut = 0;
         }, 1000);
@@ -1126,7 +1126,7 @@ document.addEventListener('keydown', (event) => {
                 pianoPresets.presets[pianoPresets.selectedPreset].computerKeys = computerKeys;
                 localStorage.setItem('pianoPresets', JSON.stringify(pianoPresets));
             }
-            ChangeMode();
+            changeMode();
             updateKeyShortcut();
         }
     }
@@ -1199,9 +1199,9 @@ const selectionScreenLine4 = document.querySelector('#selectionScreen #line4');
 let changingMode = false;
 let wasPlaying = false;
 let selectedKey = [];
-btnChangeKeyAssignment.addEventListener('click', ChangeMode);
+btnChangeKeyAssignment.addEventListener('click', changeMode);
 btnChangeKeyAssignment.style = 'animation-play-state: paused;';
-function ChangeMode() {
+function changeMode() {
     changingMode = !changingMode;
     if (changingMode) { btnChangeKeyAssignment.style = 'animation-play-state: running;'; }
     else { btnChangeKeyAssignment.style = 'animation-play-state: paused;'; }
@@ -1685,3 +1685,4 @@ function ResetPianoPreset(mode, presetIndex, presetName) {
         btnToggleSustainMode.classList = sustainMode ? 'active' : 'non-active';
     }
 }
+
