@@ -1074,7 +1074,7 @@ document.addEventListener('keydown', (event) => {
         timeOut = setTimeout(() => {
             selectedKey = [];
             selectionContainer.style.display = 'none';
-            changeMode();
+            ChangeMode();
             updateKeyShortcut();
             timeOut = 0;
         }, 1000);
@@ -1126,7 +1126,7 @@ document.addEventListener('keydown', (event) => {
                 pianoPresets.presets[pianoPresets.selectedPreset].computerKeys = computerKeys;
                 localStorage.setItem('pianoPresets', JSON.stringify(pianoPresets));
             }
-            changeMode();
+            ChangeMode();
             updateKeyShortcut();
         }
     }
@@ -1197,15 +1197,25 @@ const selectionScreenLine2 = document.querySelector('#selectionScreen #line2');
 const selectionScreenLine3 = document.querySelector('#selectionScreen #line3');
 const selectionScreenLine4 = document.querySelector('#selectionScreen #line4');
 let changingMode = false;
+let wasPlaying = false;
 let selectedKey = [];
-btnChangeKeyAssignment.addEventListener('click', changeMode);
+btnChangeKeyAssignment.addEventListener('click', ChangeMode);
 btnChangeKeyAssignment.style = 'animation-play-state: paused;';
-function changeMode() {
+function ChangeMode() {
     changingMode = !changingMode;
-    if (changingMode) {btnChangeKeyAssignment.style = 'animation-play-state: running;';}
+    if (changingMode) { btnChangeKeyAssignment.style = 'animation-play-state: running;'; }
     else { btnChangeKeyAssignment.style = 'animation-play-state: paused;'; }
 
     if (changingMode && localStorage.getItem("btnAssignment") == "true") DisplayAssignmentExplanations();
+
+    if (changingMode && isPlaying) {
+        PlayMidiFile();
+        wasPlaying = true;
+    }
+    if (!changingMode && wasPlaying) {
+        PlayMidiFile();
+        wasPlaying = false;
+    }
 }
 function selectionMode(key) {
     selectedKey = key;
@@ -1675,5 +1685,3 @@ function ResetPianoPreset(mode, presetIndex, presetName) {
         btnToggleSustainMode.classList = sustainMode ? 'active' : 'non-active';
     }
 }
-
-
