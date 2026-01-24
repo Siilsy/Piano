@@ -46,7 +46,7 @@ midiFileInput.addEventListener("change", async (event) => {
             const blob = new Blob([arrayBuffer], { type: "audio/midi" }); //I just set a random type for the sake of it — it's local, I'm the only one reading it, so who cares.
             recentMidiFiles = recentMidiFiles.filter(file => file[0] !== name);
             recentMidiFiles.unshift([name, blob]);
-            if (recentMidiFiles.length > 5) {
+            if (recentMidiFiles.length > MAX_MID_FILES) {
                 recentMidiFiles.pop();
             }
             UpdateRecentMidiFilesWindow();
@@ -575,3 +575,4 @@ function WriteUint16(buffer, val) {
 function WriteUint32(buffer, val) {
     buffer.push((val >> 24) & 0xFF, (val >> 16) & 0xFF, (val >> 8) & 0xFF, val & 0xFF);
 }
+
