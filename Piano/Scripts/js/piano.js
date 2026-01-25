@@ -984,7 +984,7 @@ function UpdatePresets() {
     computerKeys = pianoPresets.presets[pianoPresets.selectedPreset].computerKeys;
     updateKeyShortcut();
 }
-UpdatePresets();
+requestAnimationFrame(UpdatePresets);
 
 
 const keysPressed = {};
@@ -1074,7 +1074,7 @@ document.addEventListener('keydown', (event) => {
         timeOut = setTimeout(() => {
             selectedKey = [];
             selectionContainer.style.display = 'none';
-            changeMode();
+            ChangeMode();
             updateKeyShortcut();
             timeOut = 0;
         }, 1000);
@@ -1126,7 +1126,7 @@ document.addEventListener('keydown', (event) => {
                 pianoPresets.presets[pianoPresets.selectedPreset].computerKeys = computerKeys;
                 localStorage.setItem('pianoPresets', JSON.stringify(pianoPresets));
             }
-            changeMode();
+            ChangeMode();
             updateKeyShortcut();
         }
     }
@@ -1199,11 +1199,11 @@ const selectionScreenLine4 = document.querySelector('#selectionScreen #line4');
 let changingMode = false;
 let wasPlaying = false;
 let selectedKey = [];
-btnChangeKeyAssignment.addEventListener('click', changeMode);
+btnChangeKeyAssignment.addEventListener('click', ChangeMode);
 btnChangeKeyAssignment.style = 'animation-play-state: paused;';
-function changeMode() {
+function ChangeMode() {
     changingMode = !changingMode;
-    if (changingMode) { btnChangeKeyAssignment.style = 'animation-play-state: running;'; }
+    if (changingMode) {btnChangeKeyAssignment.style = 'animation-play-state: running;';}
     else { btnChangeKeyAssignment.style = 'animation-play-state: paused;'; }
 
     if (changingMode && localStorage.getItem("btnAssignment") == "true") DisplayAssignmentExplanations();
@@ -1243,6 +1243,10 @@ function updateKeyShortcut() {
             let usedOctave = parseInt(octave);
             if (usedOctave < 1) {usedOctave += 1;} usedOctave += 1;
             const touche = note + usedOctave;
+
+            const keyShortcutBox = document.createElement('div');
+            keyShortcutBox.className = 'keyShortcutBox';
+
             for (let n = 0; n < computerKeys.length; n++) {
                 if (computerKeys[n].includes(touche)) {
                     let index = n;
@@ -1250,21 +1254,34 @@ function updateKeyShortcut() {
                     const keyDiv = document.createElement('div');
                     keyDiv.className = 'key';
                     keyDiv.textContent = `${name}`;
-                    keyShortcut.appendChild(keyDiv);
+                    keyShortcutBox.appendChild(keyDiv);
                 }
             }
+
+            keyShortcut.appendChild(keyShortcutBox);
+        }
+    });
+
+    UpdateKeyShortcutScroll();
+}
+
+function UpdateKeyShortcutScroll() {
+    const keyShortcuts = document.querySelectorAll('.keyShortcut');
+    keyShortcuts.forEach(keyShortcut => {
+        const keyShortcutBox = keyShortcut.firstElementChild;
+        if (!keyShortcutBox) return;
+        keyShortcutBox.style.animation = '';
+
+        const overflow = keyShortcut.scrollHeight - keyShortcut.clientHeight;
+        if (overflow > 0) {
+            //Strange value found by testing to be sure the speed is riiiiight !
+            const duration = overflow / 12;
+
+            keyShortcutBox.style.setProperty('--scroll-distance', `-${overflow}px`);
+            keyShortcutBox.style.animation = `scroll-vertical ${duration}s cubic-bezier(.55, 0, .45, 1) infinite alternate`;
         }
     });
 }
-const keyShortcuts = document.querySelectorAll('.keyShortcut');
-keyShortcuts.forEach(keyShortcut => {
-    let scrollDirection = 1;
-    setInterval(() => {
-        keyShortcut.scrollTop -= scrollDirection;
-        const maxHeight = (keyShortcut.scrollHeight - keyShortcut.clientHeight);
-        if (keyShortcut.scrollTop == maxHeight || keyShortcut.scrollTop == 0) {scrollDirection *= -1;}
-    }, 50);
-});
 
 const btnChangePianoMode = document.querySelector('#btnChangePianoMode');
 const btnChangePianoModeI = btnChangePianoMode.querySelector('i');
@@ -1685,4 +1702,3 @@ function ResetPianoPreset(mode, presetIndex, presetName) {
         btnToggleSustainMode.classList = sustainMode ? 'active' : 'non-active';
     }
 }
-
