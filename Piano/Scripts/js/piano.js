@@ -1275,7 +1275,7 @@ function UpdateKeyShortcutScroll() {
         const overflow = keyShortcut.scrollHeight - keyShortcut.clientHeight;
         if (overflow > 0) {
             //Strange value found by testing to be sure the speed is riiiiight !
-            const duration = overflow / 12;
+            const duration = Math.max(overflow / 12, 2);
 
             keyShortcutBox.style.setProperty('--scroll-distance', `-${overflow}px`);
             keyShortcutBox.style.animation = `scroll-vertical ${duration}s cubic-bezier(.55, 0, .45, 1) infinite alternate`;
@@ -1702,3 +1702,4 @@ function ResetPianoPreset(mode, presetIndex, presetName) {
         btnToggleSustainMode.classList = sustainMode ? 'active' : 'non-active';
     }
 }
+
