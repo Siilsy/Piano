@@ -741,6 +741,7 @@ function PanoramicOnMouseMove(e) {
 
     const rect = panoramicView.getBoundingClientRect();
 
+    //Doesn't know if it has touched a border so it can go out of the box in the corners
     if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top  || e.clientY > rect.bottom) {
         panoramicKnob.style.cursor = 'grab';
         panoramicDragging = false;
@@ -4066,4 +4067,5 @@ function UpdateEventListeners(previousWindow, nextWindow) {
         //Nothing to do here for metronome but I keep this if statement "in case of" .. ??
     }
 }
+
 
